@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VuelaAmigo</title>
+<title>VuelaAmigo — Busca tu vuelo</title>
+<meta name="description" content="VuelaAmigo compara vuelos reales y te muestra el más barato. Portugués, español, inglés y alemán.">
+<!-- Favicon: avión de papel azul (SVG inline, sin archivo externo) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%231d5fd6'/%3E%3Cpath fill='white' d='M20.5 4.2a.8.8 0 0 0-.85-.18L4.9 9.1a.8.8 0 0 0 .05 1.5l4.9 1.65 1.65 4.9a.8.8 0 0 0 1.5.05l5.08-14.9a.8.8 0 0 0-.18-.85zM10.3 11.1 7 10 15 6.7l-4.7 4.4zm2.6 4.6-1.1-3.3 4.4-4.7-3.3 8z'/%3E%3C/svg%3E">
 <!-- Travelpayouts Drive (verificación de sitio + monetización) -->
 <script async data-noptimize="1" data-cfasync="false" data-wpfc-render="false" data-cmp-ab="2" src="https://tpembars.com/NTczNzEy.js?t=573712"></script>
 <script data-noptimize="1" data-cfasync="false" data-wpfc-render="false">
@@ -294,6 +297,7 @@
   $("lang-btn").addEventListener("click",(e)=>{e.stopPropagation();$("lang-menu").classList.toggle("show");});
   document.addEventListener("click",()=>$("lang-menu").classList.remove("show"));
   $("lang-menu").addEventListener("click",(e)=>{
+    e.stopPropagation();
     const b=e.target.closest("button"); if(!b) return;
     lang=b.dataset.lang; cur=LANG_CUR[lang];
     localStorage.setItem("va_lang",lang);
