@@ -105,12 +105,13 @@
   function applyBase(t){
     // base = carpeta donde vive el editor (asi resuelven andrea-assets/...)
     var base=location.href.replace(/[^\/]*$/,'');
-    // CSS de preview: hoja fiel a impresion (sin fondo gris, sin padding, ATS oculto)
-    var previewCss='<style id="__preview_fix">'+
+    // CSS de preview: SOLO en pantalla. Al imprimir no aplica, asi el CV conserva
+    // su @media print (ATS en 1pt presentes para el filtro ATS).
+    var previewCss='<style id="__preview_fix">@media screen{'+
       'html,body{background:#fff !important;padding:0 !important;margin:0 !important;}'+
       '.page{box-shadow:none !important;margin:0 !important;}'+
       '.ats-keywords{display:none !important;}'+
-      '</style>';
+      '}</style>';
     var head='<head$1>';
     if(!/<base\s/i.test(t)) head+='<base href="'+base+'">';
     head+=previewCss;
