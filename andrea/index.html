@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>Job Tracker — Andrea Velasco</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%235d7559'/%3E%3Crect x='8' y='6' width='16' height='20' rx='2' fill='%23fff'/%3E%3Cpath d='M11 15l3 3 6-7' fill='none' stroke='%235d7559' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+:root{
+  --bg:#141a16; --card:#1e261f; --border:#333f35; --accent:#7a9b74;
+  --green:#8fb986; --yellow:#d9b76a; --red:#d98a7a; --text:#f0f4ee; --muted:#9aa89a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:14px/1.5 'Segoe UI',system-ui,sans-serif;padding:24px}
+.ico{display:inline-block;width:1em;height:1em;vertical-align:-0.125em;margin-right:4px}
+h1{font-size:24px;font-weight:700;margin-bottom:4px}
+.subtitle{color:var(--muted);font-size:13px;margin-bottom:20px}
+.editor-note{background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;line-height:1.6}
+.editor-note code{background:#0d130e;color:var(--green);padding:2px 7px;border-radius:5px;font-size:12px}
+.stats{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 18px;min-width:120px}
+.stat-num{font-size:28px;font-weight:700;color:var(--accent)}
+.stat-num.green{color:var(--green)}
+.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.tab{background:transparent;border:none;color:var(--muted);font:600 14px/1 'Segoe UI',sans-serif;padding:12px 18px;cursor:pointer;border-bottom:3px solid transparent;transition:.15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--green);border-bottom-color:var(--green)}
+.tab .cnt{font-size:11px;background:var(--border);color:var(--text);border-radius:10px;padding:1px 7px;margin-left:5px}
+.panel{display:none}.panel.active{display:block}
+.section{margin-bottom:28px}
+.section-title{font-size:15px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--green)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 10px;background:var(--card);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)}
+td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:rgba(143,185,134,0.06)}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+.tag{font-size:10px;border-radius:5px;padding:1px 6px;white-space:nowrap;border:1px solid}
+.tag-remote{color:var(--green);border-color:var(--green)}
+.tag-visa{color:var(--yellow);border-color:var(--yellow)}
+.flag{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.5px}
+.fit{display:inline-flex;align-items:center;gap:4px}
+.fit-bar{width:44px;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.fit-fill{height:100%;border-radius:3px;background:var(--green)}
+.cv-btn{display:inline-block;background:var(--green);color:#0f160f;font-weight:700;font-size:11px;padding:4px 10px;border-radius:6px;white-space:nowrap}
+.cv-btn:hover{text-decoration:none;opacity:.9}
+.note{color:var(--muted);font-size:12px;margin:-8px 0 20px;line-height:1.5}
+@media(max-width:768px){body{padding:12px}.stats{flex-direction:column}table{font-size:12px}}
+</style>
+</head>
+<body>
+
+<h1>
+  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+  Job Tracker — Andrea Velasco
+</h1>
+<div class="subtitle">Diseño gráfico · Dirección de arte · Branding | Foco: remoto sin reubicación (y con visa cuando la den) — Reino Unido, España, Estados Unidos, Canadá | andrea.gv@outlook.com</div>
+
+<div class="editor-note">
+  <strong>Cómo abrir y editar un CV:</strong> cada vacante tiene su propio CV con su título.
+  El botón <strong>Abrir CV</strong> lo abre en el <strong>editor</strong>, donde puedes ajustar que quepa en una página (line-height),
+  cambiar la <strong>posición</strong>, editar las <strong>ATS keywords</strong>, <strong>guardar</strong> en el mismo archivo e <strong>imprimir a PDF</strong>.<br/>
+  Dale a <strong>Abrir CV</strong> y se abre el editor en el navegador: ajustas, y con <strong>Imprimir / Guardar como PDF</strong> bajas tu CV listo para aplicar.
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">21</div><div class="stat-label">CVs listos</div></div>
+  <div class="stat"><div class="stat-num green">0</div><div class="stat-label">Aplicadas</div></div>
+  <div class="stat"><div class="stat-num">4</div><div class="stat-label">Países</div></div>
+  <div class="stat"><div class="stat-num">0</div><div class="stat-label">Entrevistas</div></div>
+</div>
+
+<div class="note">
+  Vacantes reales de buscadores (Indeed + LinkedIn), últimas 48–96 h (8–9 oct 2026). Cada CV lleva el título de su vacante, perfil adaptado, KPI chips y ATS keywords.
+  En las vacantes donde pude leer la descripción completa (Deepgram, CELLA, Beverly Hills, EVERSANA, Movers+Shakers, Ensemble, Whatnot, ONE/SIZE, Arrowmac, Wounded Warrior), las ATS keywords usan los términos literales del JD.
+  <strong>Redwire Space se quitó</strong>: exige ciudadanía/residencia US (ITAR), no elegible desde México.
+  Verifica siempre en la publicación que siga abierta, la modalidad y si da visa antes de aplicar.
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('aplicar',this)">Por aplicar<span class="cnt">21</span></button>
+  <button class="tab" onclick="showTab('aplicadas',this)">Aplicadas<span class="cnt">0</span></button>
+  <button class="tab" onclick="showTab('como',this)">Cómo usar</button>
+</div>
+
+<div class="panel active" id="aplicar">
+
+  <div class="section">
+    <div class="section-title">Estados Unidos — remoto</div>
+    <table>
+      <thead><tr><th>Empresa</th><th>Puesto (= título del CV)</th><th>Ubicación / $</th><th>Modalidad</th><th>Fit</th><th>CV (editor)</th><th>Vacante</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Deepgram</strong></td><td>Senior Brand Designer</td><td>Remoto · US · $150K–$190K</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:85%"></span></span>85</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Brand%20DesignerD.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=01cbbde3ea75789d" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>DualEntry</strong></td><td>Brand Designer</td><td>Remoto · US · $160K–$190K</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:82%"></span></span>82</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Brand%20DesignerDE.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=1be47ef816f8594a" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>Beverly Hills Rejuvenation Center</strong></td><td>Creative Graphic Designer &amp; Brand Strategist</td><td>Remoto · US · $50K–$70K</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:84%"></span></span>84</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Creative%20Graphic%20DesignerB.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=1df9167b1fb066e4" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>CELLA</strong></td><td>Graphic Designer</td><td>Remoto · US · $44–$48/h</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:80%"></span></span>80</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Graphic%20DesignerC.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=60ecf404ae620e82" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>EVERSANA</strong></td><td>Senior Art Director</td><td>Remoto · US · $78K–$113K</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:83%"></span></span>83</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Art%20DirectorEV.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=7d607f6b3948cdeb" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>Movers+Shakers</strong></td><td>Art Director, B2B</td><td>Remoto · US (LA)</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:80%"></span></span>80</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Art%20Director%20B2BMS.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=c504f9f6f634206e" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>Ensemble Performing Arts</strong></td><td>Marketing &amp; Graphic Design Specialist</td><td>Remoto · US · $60K–$70K</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:79%"></span></span>79</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Marketing%20Graphic%20DesignerEP.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=27194fb2fd06fb55" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>Wounded Warrior Project</strong></td><td>Senior Graphic Designer</td><td>Remoto · US</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:80%"></span></span>80</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Graphic%20DesignerWW.html" target="_blank">Abrir CV</a></td><td><a href="https://www.linkedin.com/jobs/view/4473022854" target="_blank">LinkedIn</a></td></tr>
+        <tr><td><strong>Arrowmac</strong></td><td>Senior Graphic Designer</td><td>Remoto · US (OC, CA)</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:79%"></span></span>79</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Graphic%20DesignerAR.html" target="_blank">Abrir CV</a></td><td><a href="https://www.linkedin.com/jobs/view/4475462676" target="_blank">LinkedIn</a></td></tr>
+        <tr><td><strong>Whatnot</strong></td><td>Senior Art Director, 2D Illustration</td><td>Remoto · US</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:78%"></span></span>78</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Art%20Director%20IllustrationW.html" target="_blank">Abrir CV</a></td><td><a href="https://www.linkedin.com/jobs/view/4466147735" target="_blank">LinkedIn</a></td></tr>
+        <tr><td><strong>ONE/SIZE Beauty</strong></td><td>Senior Graphic Designer</td><td>Remoto · US (Culver City)</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:82%"></span></span>82</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Graphic%20DesignerOS.html" target="_blank">Abrir CV</a></td><td><a href="https://www.linkedin.com/jobs/view/4465698829" target="_blank">LinkedIn</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Reino Unido</div>
+    <table>
+      <thead><tr><th>Empresa</th><th>Puesto (= título del CV)</th><th>Ubicación</th><th>Modalidad</th><th>Fit</th><th>CV (editor)</th><th>Vacante</th></tr></thead>
+      <tbody>
+        <tr><td><strong>StudioXAG</strong></td><td>Freelance Senior Graphic Designer</td><td>Londres, UK</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:84%"></span></span>84</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Graphic%20DesignerSX.html" target="_blank">Abrir CV</a></td><td><a href="https://uk.indeed.com/viewjob?jk=d1117faea9c10bc1" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>End Clothing</strong></td><td>Junior Art Director</td><td>Londres, UK</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:82%"></span></span>82</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Junior%20Art%20DirectorEN.html" target="_blank">Abrir CV</a></td><td><a href="https://uk.indeed.com/viewjob?jk=8c03c65b64a6acef" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>UnyBrands</strong></td><td>Midweight Graphic Designer</td><td>Hemel Hempstead, UK</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:85%"></span></span>85</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Midweight%20Graphic%20DesignerUB.html" target="_blank">Abrir CV</a></td><td><a href="https://uk.indeed.com/viewjob?jk=ed27dfc995e26f73" target="_blank">Indeed</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">España</div>
+    <table>
+      <thead><tr><th>Empresa</th><th>Puesto (= título del CV)</th><th>Ubicación</th><th>Modalidad</th><th>Fit</th><th>CV (editor)</th><th>Vacante</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Preverisk</strong></td><td>Diseñador Gráfico</td><td>Palma de Mallorca, ES</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:80%"></span></span>80</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Disenador%20GraficoPV.html" target="_blank">Abrir CV</a></td><td><a href="https://es.indeed.com/viewjob?jk=a47eeebb43541da3" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>Deluxe Media</strong></td><td>Lead Graphic Designer</td><td>Madrid, ES</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:84%"></span></span>84</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Lead%20Graphic%20DesignerDX.html" target="_blank">Abrir CV</a></td><td><a href="https://es.indeed.com/viewjob?jk=3497a1dd5305b748" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>Deluxe Media</strong></td><td>Graphic Designer</td><td>Madrid, ES</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:82%"></span></span>82</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Graphic%20DesignerDX2.html" target="_blank">Abrir CV</a></td><td><a href="https://es.indeed.com/viewjob?jk=ec76c901a7e073d0" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>Silicon HR</strong></td><td>Junior Creative &amp; Brand Designer</td><td>Madrid, ES</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:81%"></span></span>81</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Creative%20Brand%20DesignerSH.html" target="_blank">Abrir CV</a></td><td><a href="https://es.indeed.com/viewjob?jk=4d0c9a86af740c2b" target="_blank">Indeed</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Canadá</div>
+    <table>
+      <thead><tr><th>Empresa</th><th>Puesto (= título del CV)</th><th>Ubicación</th><th>Modalidad</th><th>Fit</th><th>CV (editor)</th><th>Vacante</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Contempo Media</strong></td><td>Graphic &amp; Web Designer</td><td>Toronto, ON, CA</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:82%"></span></span>82</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Graphic%20Web%20DesignerCM.html" target="_blank">Abrir CV</a></td><td><a href="https://ca.indeed.com/viewjob?jk=b6004658f0204ac8" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>DECIEM (NIOD / The Ordinary)</strong></td><td>Senior Manager, Art &amp; Design</td><td>Toronto, ON, CA</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:80%"></span></span>80</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Art%20Design%20ManagerDC.html" target="_blank">Abrir CV</a></td><td><a href="https://ca.indeed.com/viewjob?jk=a7106b0992069709" target="_blank">Indeed</a></td></tr>
+        <tr><td><strong>Walmart Canada</strong></td><td>Associate Graphic Designer</td><td>Mississauga, ON, CA</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:81%"></span></span>81</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Associate%20Graphic%20DesignerWM.html" target="_blank">Abrir CV</a></td><td><a href="https://ca.indeed.com/viewjob?jk=42721c4f97e5c88b" target="_blank">Indeed</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<div class="panel" id="aplicadas">
+  <div class="section"><div class="section-title">Aplicadas</div>
+  <p style="color:var(--muted)">Aún no hay vacantes aplicadas. Cuando apliques a una, muévela aquí con la fecha.</p></div>
+</div>
+
+<div class="panel" id="como">
+  <div class="section"><div class="section-title">Cómo usar este tracker</div>
+    <table><tbody>
+      <tr><td>2</td><td>Abre una vacante con el enlace de la derecha y revisa que siga abierta, la modalidad (remoto) y si da visa.</td></tr>
+      <tr><td>3</td><td>Dale clic a <strong>Abrir CV</strong>: se abre en el editor con el título de esa vacante. Ahí ajustas line-height para que quepa en una página, cambias la posición y las ATS keywords, <strong>Guardar</strong> sobreescribe el mismo archivo, e <strong>Imprimir / Exportar PDF</strong> lo guarda en PDF A4.</td></tr>
+      <tr><td>4</td><td>Aplica en el portal de la empresa. Luego mueve esa fila a <strong>Aplicadas</strong> con la fecha.</td></tr>
+      <tr><td>5</td><td>Para más vacantes recientes usa <strong>Andrea-Contexto-Busqueda-ChatGPT.md</strong> (en esta carpeta): pégalo en ChatGPT con los links de LinkedIn filtrados por 48 h.</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<script>
+function showTab(id, btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
