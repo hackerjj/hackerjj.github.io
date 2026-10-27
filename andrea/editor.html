@@ -12,11 +12,14 @@
   header{background:var(--accent);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:10px}
   header svg{width:22px;height:22px}
   header h1{font-size:16px;margin:0;font-weight:700}
+  .ver-chip{font:600 12px/1 "Segoe UI",system-ui,sans-serif;color:#fff;background:transparent;border:1px solid #fff;border-radius:10px;padding:3px 9px;text-decoration:none}
+  .ver-chip:hover{background:#fff;color:var(--accent)}
   .wrap{max-width:1400px;margin:16px auto;padding:0 16px;display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}
   .panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
   .panel h2{font-size:13px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
   button{font:inherit;border:0;border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:600}
   .btn-primary{background:var(--accent);color:#fff}
+  .btn-ok{background:#3f5a3b;color:#fff}
   .btn-ghost{background:#eef2ec;color:var(--ink)}
   button:disabled{opacity:.45;cursor:not-allowed}
   select,input[type=text]{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff}
@@ -26,10 +29,16 @@
   input[type=number]{width:80px;font:inherit;padding:6px 8px;border:1px solid var(--border);border-radius:6px;text-align:center}
   .val{font-size:34px;font-weight:800;color:var(--accent);text-align:center;margin:4px 0}
   .hint{font-size:12px;color:var(--muted);margin:10px 0 0;line-height:1.5}
+  .status{font-size:12.5px;margin-top:10px;padding:8px 10px;border-radius:6px;display:none}
+  .status.show{display:block}
+  .status.ok{background:#eef2ec;color:#3f5a3b}
+  .status.err{background:#fdecec;color:#a81e17}
+  .status.info{background:#f2f0ed;color:#5d7559}
   .quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
   .quick button{padding:5px 10px;font-size:12px;background:#eef2ec;color:var(--ink)}
+  kbd{background:#eef2ec;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:11px}
   .preview-stage{position:relative;width:100%;overflow:hidden;border:1px solid var(--border);border-radius:10px;background:#e9ebe7}
-  /* La hoja A4 se renderiza a tamano real (210x297mm) y se escala con JS para caber en el panel */
+  /* La hoja A4 se renderiza a tamaño real (210x297mm) y se escala con JS para caber en el panel */
   iframe{width:210mm;height:297mm;border:0;background:#fff;transform-origin:top left;display:block;margin:0 auto}
   small{color:var(--muted)}
   .note{font-size:12px;background:#eef2ec;border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:10px;line-height:1.5}
@@ -39,12 +48,17 @@
 <header>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
   <h1>Editor de CV — Andrea Velasco</h1>
+  <a class="ver-chip" id="verChip" href="index.html" title="Ver historial de cambios en el tracker">v2.1</a>
 </header>
 
 <div class="wrap">
   <div class="panel">
     <h2>1. Elegir CV</h2>
     <select id="picker"><option value="">— elige un CV —</option></select>
+    <div class="row"><small>o pega la liga o el nombre del archivo:</small></div>
+    <input type="text" id="linkbox" placeholder="Andrea Velasco - Graphic DesignerC.html" />
+    <div class="row"><button id="load" class="btn-primary">Cargar</button></div>
+    <div class="status" id="fstat"></div>
 
     <h2 style="margin-top:18px">1.5. Ajustar tamaño de fuente</h2>
     <div class="row"><small>Izquierda (banner)</small></div>
@@ -74,8 +88,8 @@
       <button class="btn-ghost" id="plus" disabled>+0.01</button>
     </div>
     <div class="quick" id="quick">
-      <button data-v="1.30">1.30</button><button data-v="1.35">1.35</button>
-      <button data-v="1.41">1.41</button><button data-v="1.45">1.45</button><button data-v="1.50">1.50</button>
+      <button data-v="1.30">1.30</button><button data-v="1.35">1.35</button><button data-v="1.36">1.36</button>
+      <button data-v="1.40">1.40</button><button data-v="1.41">1.41</button><button data-v="1.45">1.45</button><button data-v="1.50">1.50</button>
     </div>
 
     <h2 style="margin-top:18px">3. Cambiar el puesto (título)</h2>
@@ -86,14 +100,26 @@
     <textarea id="atsKeywords" placeholder="Keywords separadas por comas..." disabled></textarea>
     <p class="hint">Son invisibles al imprimir pero las leen los filtros ATS. Usa términos de la vacante que puedas defender.</p>
 
-    <h2 style="margin-top:18px">5. Exportar a PDF</h2>
+    <h2 style="margin-top:18px">5. Guardar y exportar</h2>
     <input type="text" id="pdfName" readonly placeholder="Nombre del PDF" />
-    <div class="row"><button id="print" class="btn-primary" disabled>Imprimir / Guardar como PDF</button></div>
+    <div class="row" style="flex-wrap:wrap">
+      <button id="save" class="btn-ok" disabled>Guardar ajustes en este navegador</button>
+      <button id="download" class="btn-ghost" disabled>Descargar HTML</button>
+      <button id="reset" class="btn-ghost" disabled>Restablecer</button>
+      <button id="print" class="btn-primary" disabled>Imprimir / Guardar como PDF</button>
+    </div>
+    <div class="status" id="status"></div>
+
     <div class="note">
       <strong>Cómo guardar tu PDF:</strong> dale a <em>Imprimir / Guardar como PDF</em>, elige
       <strong>Guardar como PDF</strong>, tamaño <strong>A4</strong>, márgenes <strong>Ninguno</strong>
-      y activa <strong>Gráficos de fondo</strong>.<br/><br/>
-      Esta versión en línea ajusta y exporta. Tus cambios van a tu PDF; no se guardan en la página.
+      y activa <strong>Gráficos de fondo</strong>. El nombre sugerido siempre empieza con "Andrea Velasco - ".<br/><br/>
+      Esta página vive en GitHub Pages y no puede reescribir el CV publicado. <strong>Guardar ajustes</strong>
+      los deja solo en este navegador, para este CV: al volver a abrirlo se aplican solos. Si cambias de equipo
+      o borras los datos del navegador, no viajan contigo.<br/>
+      <strong>Descargar HTML</strong> baja una copia del CV con tus cambios, por si quieres conservarla o mandársela a Jair.<br/>
+      <strong>Restablecer</strong> borra los ajustes guardados de este CV y vuelve al original.<br/><br/>
+      Atajos: <kbd>↑</kbd>/<kbd>↓</kbd> line-height ±0.01 (cuando no estás escribiendo en un campo), <kbd>Cmd/Ctrl+S</kbd> guarda los ajustes.
     </div>
   </div>
 
@@ -107,16 +133,22 @@
 <script src="cv-list.js"></script>
 <script>
 (function(){
-  // Lista de CVs disponibles (se llena desde el tracker via ?file=, o del arreglo CVS)
   var CVS = window.ANDREA_CVS || [];
+  var PREFIX = 'Andrea Velasco - ';
+  var STORE = 'andrea-editor:v1:';
   var curFile="", htmlText="", curLH=1.41, curPos="", curATS="", curLeftScale=1.00, curRightScale=1.00;
   var $=function(id){return document.getElementById(id)};
   var slider=$('slider'), num=$('num'), valBig=$('valBig'), preview=$('preview');
-  var printBtn=$('print'), posInput=$('currentPosition'), atsInput=$('atsKeywords'), picker=$('picker'), pdfName=$('pdfName');
+  var printBtn=$('print'), saveBtn=$('save'), downloadBtn=$('download'), resetBtn=$('reset');
+  var posInput=$('currentPosition'), atsInput=$('atsKeywords'), picker=$('picker'), pdfName=$('pdfName');
+  var linkbox=$('linkbox'), fstat=$('fstat'), status=$('status');
   var sliderLeftScale=$('sliderLeftScale'), numLeftScale=$('numLeftScale'), valLeftScale=$('valLeftScale');
   var sliderRightScale=$('sliderRightScale'), numRightScale=$('numRightScale'), valRightScale=$('valRightScale');
   var EDITOR_TITLE=document.title;
+  var FOLDER=location.href.replace(/[?#].*$/,'').replace(/[^\/]*$/,'');
 
+  function setStatus(el,type,msg){ el.className='status show '+type; el.textContent=msg; }
+  function clearStatus(el){ el.className='status'; el.textContent=''; }
   function fmt(v){ return (Math.round(v*100)/100).toFixed(2); }
   function esc(v){ return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]}); }
   function readLH(t){ var m=t.match(/--print-lineheight:\s*([0-9.]+)/); return m?parseFloat(m[1]):1.41; }
@@ -124,7 +156,19 @@
   function readATS(t){ var m=t.match(/<div class="ats-keywords"[^>]*>([\s\S]*?)<\/div>/i); return m?m[1].replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').trim():''; }
   function readScale(t,which,fallback){ var m=t.match(new RegExp('--'+which+'-scale:\\s*([0-9.]+)')); return m?parseFloat(m[1]):fallback; }
   function applyScale(t,which,v){ var re=new RegExp('--'+which+'-scale:\\s*[0-9.]+'); return re.test(t)?t.replace(re,'--'+which+'-scale: '+fmt(v)):t; }
-  function pdfFilename(){ var base=(curFile||'cv.html').split('/').pop().replace(/\.(html?|htm)$/i,''); return base+'.pdf'; }
+  function pdfFilename(){
+    var base=(curFile||'cv.html').split('/').pop().replace(/\.(html?|htm)$/i,'');
+    if(base.indexOf(PREFIX)===0) return base+'.pdf';
+    return PREFIX+base+'.pdf';
+  }
+  function nameFrom(input){
+    input=(input||'').trim();
+    if(!input) return '';
+    input=input.replace(/[?#].*$/,'');
+    try{ input=decodeURIComponent(input); }catch(e){}
+    var i=input.lastIndexOf('/');
+    return i>=0 ? input.slice(i+1) : input;
+  }
   function waitForImages(doc){
     var imgs=Array.prototype.slice.call((doc&&doc.images)||[]);
     return Promise.all(imgs.map(function(img){
@@ -135,22 +179,24 @@
   function applyLH(t,v){ var s=fmt(v); t=t.replace(/--print-lineheight:\s*[0-9.]+/g,'--print-lineheight: '+s); t=t.replace(/line-height:\s*[0-9.]+\s*!important/g,'line-height:'+s+' !important'); return t; }
   function applyPos(t,p){ return t.replace(/(<section class="job">[\s\S]*?<h3>)[\s\S]*?(<\/h3>)/i,'$1'+esc(p).replace(/\n/g,' ')+'$2'); }
   function applyATS(t,k){ return t.replace(/(<div class="ats-keywords"[^>]*>)[\s\S]*?(<\/div>)/i,'$1'+esc(k).replace(/\n/g,' ')+'$2'); }
-  function applyBase(t){
-    // base = carpeta donde vive el editor (asi resuelven andrea-assets/...)
-    var base=location.href.replace(/[^\/]*$/,'');
-    // CSS de preview: SOLO en pantalla. Al imprimir no aplica, asi el CV conserva
+  function addBase(t){
+    if(/<base\s/i.test(t)) return t;
+    return t.replace(/<head([^>]*)>/i,'<head$1><base href="'+FOLDER+'">');
+  }
+  function applyPreviewCss(t){
+    // CSS de preview: SOLO en pantalla. Al imprimir no aplica, así el CV conserva
     // su @media print (ATS en 1pt presentes para el filtro ATS).
     var previewCss='<style id="__preview_fix">@media screen{'+
       'html,body{background:#fff !important;padding:0 !important;margin:0 !important;}'+
       '.page{box-shadow:none !important;margin:0 !important;}'+
       '.ats-keywords{display:none !important;}'+
       '}</style>';
-    var head='<head$1>';
-    if(!/<base\s/i.test(t)) head+='<base href="'+base+'">';
-    head+=previewCss;
-    return t.replace(/<head([^>]*)>/i, head);
+    return t.replace(/<head([^>]*)>/i,'<head$1>'+previewCss);
   }
-  function refresh(){ var s=applyLH(htmlText,curLH); s=applyScale(s,'left',curLeftScale); s=applyScale(s,'right',curRightScale); s=applyPos(s,curPos); s=applyATS(s,curATS); s=applyBase(s); var b=new Blob([s],{type:'text/html'}); preview.src=URL.createObjectURL(b); pdfName.value=pdfFilename(); }
+  function buildEdited(){ var s=applyLH(htmlText,curLH); s=applyScale(s,'left',curLeftScale); s=applyScale(s,'right',curRightScale); s=applyPos(s,curPos); s=applyATS(s,curATS); return s; }
+  function buildPreview(){ return applyPreviewCss(addBase(buildEdited())); }
+  function buildDownload(){ return addBase(buildEdited()); }
+  function refresh(){ var b=new Blob([buildPreview()],{type:'text/html'}); preview.src=URL.createObjectURL(b); pdfName.value=pdfFilename(); }
   function setVal(v,upd){ v=Math.max(1,Math.min(1.8,v)); curLH=Math.round(v*100)/100; valBig.textContent=fmt(curLH); if(upd!==false){slider.value=curLH;num.value=fmt(curLH);} if(htmlText) refresh(); }
   function setScaleVal(which,v,upd){
     v=Math.max(0.80,Math.min(1.20,v)); v=Math.round(v*100)/100;
@@ -158,25 +204,44 @@
     else { curRightScale=v; valRightScale.textContent=fmt(v); if(upd!==false){sliderRightScale.value=v;numRightScale.value=fmt(v);} }
     if(htmlText) refresh();
   }
-  function enable(on){ [slider,num,printBtn,posInput,atsInput,$('minus'),$('plus'),sliderLeftScale,numLeftScale,$('minusLeft'),$('plusLeft'),sliderRightScale,numRightScale,$('minusRight'),$('plusRight')].forEach(function(e){e.disabled=!on}); document.querySelectorAll('#quick button').forEach(function(b){b.disabled=!on}); }
+  function enable(on){ [slider,num,printBtn,saveBtn,downloadBtn,resetBtn,posInput,atsInput,$('minus'),$('plus'),sliderLeftScale,numLeftScale,$('minusLeft'),$('plusLeft'),sliderRightScale,numRightScale,$('minusRight'),$('plusRight')].forEach(function(e){e.disabled=!on}); document.querySelectorAll('#quick button').forEach(function(b){b.disabled=!on}); }
 
-  async function loadFile(name){
-    if(!name) return;
+  // Ajustes por CV en localStorage (equivalente estático de "Guardar en el mismo archivo")
+  function readSaved(name){ try{ var raw=localStorage.getItem(STORE+name); return raw?JSON.parse(raw):null; }catch(e){ return null; } }
+  function writeSaved(name,data){ localStorage.setItem(STORE+name, JSON.stringify(data)); }
+  function removeSaved(name){ try{ localStorage.removeItem(STORE+name); }catch(e){} }
+  function fmtDate(iso){ try{ return new Date(iso).toLocaleString('es-MX',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso; } }
+
+  async function loadFile(name, opts){
+    opts=opts||{};
+    if(!name){ setStatus(fstat,'err','Elige un CV o pega su nombre.'); return; }
     try{
       var res=await fetch(encodeURIComponent(name),{cache:'no-store'});
       if(!res.ok) throw new Error('HTTP '+res.status);
       htmlText=await res.text(); curFile=name;
       curPos=readPos(htmlText); curATS=readATS(htmlText); curLH=readLH(htmlText);
       curLeftScale=readScale(htmlText,'left',1.00); curRightScale=readScale(htmlText,'right',1.00);
-      enable(true); posInput.value=curPos; atsInput.value=curATS;
+      var saved=opts.ignoreSaved?null:readSaved(name);
+      if(saved){
+        if(typeof saved.lh==='number') curLH=saved.lh;
+        if(typeof saved.left==='number') curLeftScale=saved.left;
+        if(typeof saved.right==='number') curRightScale=saved.right;
+        if(typeof saved.pos==='string') curPos=saved.pos;
+        if(typeof saved.ats==='string') curATS=saved.ats;
+      }
+      enable(true); posInput.value=curPos; atsInput.value=curATS; linkbox.value=name;
       setScaleVal('left',curLeftScale,true); setScaleVal('right',curRightScale,true); setVal(curLH,true);
       if(picker.value!==name) picker.value=name;
-    }catch(e){ alert('No se pudo cargar '+name+' ('+e.message+')'); }
+      if(saved) setStatus(fstat,'ok','Cargado: '+name+'. Se aplicaron tus ajustes guardados ('+fmtDate(saved.savedAt)+').');
+      else setStatus(fstat,'ok','Cargado: '+name);
+      if(!opts.keepStatus) clearStatus(status);
+    }catch(e){ setStatus(fstat,'err','No se pudo cargar '+name+' ('+e.message+'). Revisa que el CV esté en la lista.'); }
   }
 
-  // poblar dropdown
   CVS.forEach(function(f){ var o=document.createElement('option'); o.value=f; o.textContent=f.replace(/^Andrea Velasco - /,'').replace(/\.html$/,''); picker.appendChild(o); });
-  picker.addEventListener('change', function(){ if(picker.value) loadFile(picker.value); });
+  picker.addEventListener('change', function(){ if(picker.value){ linkbox.value=picker.value; loadFile(picker.value); } });
+  $('load').addEventListener('click', function(){ loadFile(nameFrom(linkbox.value)); });
+  linkbox.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); loadFile(nameFrom(linkbox.value)); } });
 
   slider.addEventListener('input', function(){ setVal(parseFloat(slider.value),false); num.value=fmt(curLH); });
   num.addEventListener('input', function(){ var v=parseFloat(num.value); if(!isNaN(v)){ setVal(v,false); slider.value=curLH; } });
@@ -193,6 +258,31 @@
   numRightScale.addEventListener('input', function(){ var v=parseFloat(numRightScale.value); if(!isNaN(v)){ setScaleVal('right',v,false); sliderRightScale.value=curRightScale; } });
   $('plusRight').addEventListener('click', function(){ setScaleVal('right',curRightScale+0.01,true); });
   $('minusRight').addEventListener('click', function(){ setScaleVal('right',curRightScale-0.01,true); });
+
+  saveBtn.addEventListener('click', function(){
+    if(!curFile){ setStatus(status,'err','Primero carga un CV.'); return; }
+    try{
+      writeSaved(curFile,{lh:curLH,left:curLeftScale,right:curRightScale,pos:curPos,ats:curATS,savedAt:new Date().toISOString()});
+      setStatus(status,'ok','Guardado en este navegador: posición "'+curPos+'", line-height '+fmt(curLH)+', tamaño izq '+fmt(curLeftScale)+' / der '+fmt(curRightScale)+'.');
+    }catch(e){ setStatus(status,'err','No se pudo guardar en este navegador ('+e.message+'). Usa Descargar HTML para conservar tus cambios.'); }
+  });
+  downloadBtn.addEventListener('click', function(){
+    if(!curFile) return;
+    try{
+      var blob=new Blob([buildDownload()],{type:'text/html'});
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a'); a.href=url; a.download=curFile.split('/').pop();
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      setStatus(status,'info','Se descargó '+a.download+' con tus cambios. Las imágenes y el QR cargan desde la página publicada.');
+    }catch(e){ setStatus(status,'err','No se pudo descargar ('+e.message+').'); }
+  });
+  resetBtn.addEventListener('click', async function(){
+    if(!curFile) return;
+    removeSaved(curFile);
+    await loadFile(curFile,{ignoreSaved:true,keepStatus:true});
+    setStatus(status,'info','Se borraron los ajustes guardados de este CV. Volvió a su versión original.');
+  });
   printBtn.addEventListener('click', async function(){
     if(!curFile) return;
     try{
@@ -205,6 +295,15 @@
     preview.contentWindow.focus(); preview.contentWindow.print();
   });
 
+  document.addEventListener('keydown', function(e){
+    if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='s'){ e.preventDefault(); if(!saveBtn.disabled) saveBtn.click(); return; }
+    if(saveBtn.disabled) return;
+    var tag=(e.target&&e.target.tagName||'').toLowerCase();
+    if(tag==='input'||tag==='textarea'||tag==='select'||(e.target&&e.target.isContentEditable)) return;
+    if(e.key==='ArrowUp'){ e.preventDefault(); setVal(curLH+0.01,true); }
+    if(e.key==='ArrowDown'){ e.preventDefault(); setVal(curLH-0.01,true); }
+  });
+
   // Escalar la hoja A4 para que entre completa en el panel (210mm = 793.7px @96dpi, 297mm = 1122.5px)
   var A4W=793.7, A4H=1122.5;
   function fitPreview(){
@@ -215,12 +314,14 @@
     stage.style.height=(A4H*scale)+'px';
   }
   window.addEventListener('resize', fitPreview);
-  // reajustar cuando el iframe cargue nuevo contenido
   preview.addEventListener('load', fitPreview);
   fitPreview();
 
+  // Ganchos de prueba (sin efecto para Andrea)
+  window.__andreaEditor={buildPreview:buildPreview,buildDownload:buildDownload,pdfFilename:pdfFilename,loadFile:loadFile,state:function(){return {file:curFile,lh:curLH,left:curLeftScale,right:curRightScale,pos:curPos,ats:curATS};}};
+
   var qf=new URLSearchParams(location.search).get('file');
-  if(qf){ try{qf=decodeURIComponent(qf);}catch(e){} loadFile(qf); }
+  if(qf){ try{qf=decodeURIComponent(qf);}catch(e){} linkbox.value=qf; loadFile(nameFrom(qf)); }
 })();
 </script>
 </body>

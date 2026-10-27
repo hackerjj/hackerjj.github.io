@@ -148,7 +148,7 @@ tr.jt-hidden{display:none}
 <h1>
   <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
   Job Tracker — Andrea Velasco
-  <button type="button" class="ver-chip" onclick="toggleChangelog(true)" title="Ver historial de cambios" aria-haspopup="dialog">v2.0</button>
+  <button type="button" class="ver-chip" onclick="toggleChangelog(true)" title="Ver historial de cambios" aria-haspopup="dialog">v2.1</button>
 </h1>
 <div class="subtitle">Diseño gráfico · Dirección de arte · Branding | Foco: remoto sin reubicación (y con visa cuando la den) — Reino Unido, España, Estados Unidos, Canadá | andrea.gv@outlook.com</div>
 <div style="margin:-6px 0 18px"><a href="Andrea-Velasco-Portafolio-2026.pdf" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:var(--green);color:#0f160f;font-weight:700;font-size:13px;padding:8px 14px;border-radius:8px;text-decoration:none"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Ver portafolio (PDF)</a></div>
@@ -311,6 +311,15 @@ tr.jt-hidden{display:none}
       <button type="button" class="cl-close" onclick="toggleChangelog(false)">Cerrar</button>
     </div>
     <div class="cl-body" id="changelog-body">
+      <div class="cl-ver">
+        <h4>v2.1 <small>27 oct 2026 · 16:30</small></h4>
+        <ul>
+          <li><span class="cl-tag cl-add">NUEVO</span>Editor en línea al nivel del editor de Jair: pegar la liga o el nombre del CV y cargar (también con Enter), mensajes de estado en vez de alertas y atajos de line-height 1.36 y 1.40.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span><strong>Guardar ajustes en este navegador</strong> por CV (se vuelven a aplicar al abrirlo de nuevo), <strong>Descargar HTML</strong> con los cambios y <strong>Restablecer</strong>. La ayuda del editor explica que en GitHub Pages no se puede reescribir el CV publicado.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Atajos Cmd/Ctrl+S (guardar ajustes) y flechas ↑/↓ (line-height ±0.01, sin interferir cuando estás escribiendo en un campo).</li>
+          <li><span class="cl-tag cl-chg">CAMBIO</span>El nombre sugerido del PDF siempre empieza con "Andrea Velasco - ". El editor muestra su versión en un chip que lleva a este historial.</li>
+        </ul>
+      </div>
       <div class="cl-ver">
         <h4>v2.0 <small>26 oct 2026 · 18:40</small></h4>
         <ul>
