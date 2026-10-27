@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andrea Velasco — Graphic Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{ --print-lineheight: 1.41; --left-scale: 1; --right-scale: 1; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body{ font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; background:#d0d0d0; display:flex; justify-content:center; align-items:flex-start; padding:20px; }
+.page{ width:210mm; height:297mm; background:#f9f9f9; display:grid; grid-template-columns:64mm 1fr; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.18); }
+.col-left{ background:#f2f0ed; padding:0 0 8mm 0; border-right:1px solid #d8d4cf; display:flex; flex-direction:column; }
+.avatar-wrap{ width:100%; flex-shrink:0; padding:6mm 8mm 2mm 8mm; display:flex; justify-content:center; }
+.avatar-wrap img{ width:91%; height:auto; display:block; border-radius:50%; }
+.left-content{ padding:5mm 6mm 0 7mm; display:flex; flex-direction:column; flex:1; }
+.cv-logo{ width:100%; max-width:52mm; height:auto; display:block; margin-bottom:0; line-height:0; }
+section.job{ display:block; margin:0; }
+section.job h3{ font-size:calc(6pt * var(--left-scale)); letter-spacing:3.5px; text-transform:uppercase; color:#5d7559; margin:0 0 4mm 0; font-weight:500; }
+.left-section{ margin-bottom:4mm; }
+.left-title{ font-size:calc(6pt * var(--left-scale)); font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#5d7559; margin-bottom:2.5mm; padding-bottom:1.5mm; border-bottom:0.5px solid #b8b4af; }
+.left-title.script{ font-family:'Playfair Display',Georgia,serif; font-style:italic; font-weight:400; font-size:calc(10pt * var(--left-scale)); letter-spacing:0; text-transform:none; border-bottom:none; padding-bottom:0; margin-bottom:2mm; }
+.contact-item{ font-size:calc(7pt * var(--left-scale)); color:#444; line-height:1.9; display:flex; align-items:center; gap:5px; }
+.c-dot{ width:5px; height:5px; background:#5d7559; border-radius:50%; flex-shrink:0; }
+.skills-grid{ display:flex; flex-direction:column; gap:2px; }
+.skill-item{ display:flex; align-items:center; gap:6px; font-size:calc(7pt * var(--left-scale)); color:#333; line-height:1.45; }
+.skill-dot{ width:5px; height:5px; border-radius:50%; background:#5d7559; flex-shrink:0; }
+.col-right{ padding:9mm 9mm 8mm 8mm; display:flex; flex-direction:column; justify-content:space-between; }
+.right-sections{ display:flex; flex-direction:column; flex:1; }
+.right-section{ margin-bottom:3.5mm; }
+.right-title{ font-family:'Cormorant Garamond','Playfair Display',Georgia,serif; font-style:italic; font-size:calc(14pt * var(--right-scale)); font-weight:400; color:#5d7559; border-bottom:0.5px solid #b0b0b0; padding-bottom:1.5mm; margin-bottom:2.5mm; line-height:1; }
+.profile{ font-size:calc(7.4pt * var(--right-scale)); color:#444; line-height:1.5; margin-bottom:3mm; }
+.kpis{ display:flex; flex-wrap:wrap; gap:3px; margin-bottom:3.5mm; }
+.kpi{ font-size:calc(6pt * var(--right-scale)); font-weight:600; color:#3f5a3b; background:rgba(93,117,89,0.1); border:0.5px solid rgba(93,117,89,0.35); border-radius:9px; padding:2px 7px; white-space:nowrap; }
+.job{ display:grid; grid-template-columns:26mm 1fr; gap:3mm; margin-bottom:2.3mm; }
+.job:last-child{ margin-bottom:0; }
+.job-meta{ padding-top:0.3mm; }
+.job-period{ font-size:calc(6.5pt * var(--right-scale)); font-weight:700; color:#222; line-height:1.5; }
+.job-jobtitle{ font-size:calc(6.5pt * var(--right-scale)); color:#333; line-height:1.4; }
+.job-company{ font-size:calc(6.5pt * var(--right-scale)); font-style:italic; color:#5d7559; line-height:1.4; }
+.job-desc{ font-size:calc(7pt * var(--right-scale)); color:#444; line-height:1.55; }
+.job-bullets{ list-style:none; padding:0; margin:0; }
+.job-bullets li{ font-size:calc(6.8pt * var(--right-scale)); color:#444; line-height:1.45; padding-left:7px; position:relative; margin-bottom:0.4mm; }
+.job-bullets li::before{ content:"–"; position:absolute; left:0; color:#5d7559; }
+.job-bullets li strong{ color:#222; font-weight:600; }
+.edu-row{ display:grid; grid-template-columns:9mm 1fr; gap:3mm; margin-bottom:0.8mm; font-size:calc(7pt * var(--right-scale)); color:#333; line-height:1.4; }
+.edu-year{ font-weight:700; color:#222; }
+.cursos-label{ font-size:calc(6pt * var(--right-scale)); font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#444; margin:2.5mm 0 1.5mm 0; }
+.cursos-list{ list-style:none; }
+.cursos-list li{ font-size:calc(6.8pt * var(--right-scale)); color:#444; line-height:1.55; padding-left:8px; position:relative; text-align:justify; hyphens:auto; }
+.cursos-list li::before{ content:"–"; position:absolute; left:0; color:#5d7559; }
+.herr-icons-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:2mm; width:100%; flex-wrap:nowrap; }
+.herr-icons-row img{ height:14px; width:auto; object-fit:contain; display:block; flex-shrink:1; }
+.herr-text{ font-size:calc(6pt * var(--right-scale)); color:#777; line-height:1.5; }
+.qr-block{ text-align:center; padding-top:7mm; }
+.qr-label{ font-size:calc(5.5pt * var(--left-scale)); letter-spacing:2px; text-transform:uppercase; color:#5d7559; font-weight:700; margin-bottom:2mm; }
+.qr-block svg{ display:block; margin:0 auto; }
+.ats-keywords{ position:absolute; left:-9999px; top:-9999px; opacity:0; font-size:5.5pt; }
+@media print{
+  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+  html,body{ line-height:1.41 !important; background:none !important; padding:0 !important; margin:0 !important; }
+  .page{ width:210mm !important; height:297mm !important; box-shadow:none !important; display:grid !important; grid-template-columns:64mm 1fr !important; overflow:hidden !important; }
+  .col-left{ background:#f2f0ed !important; display:flex !important; flex-direction:column !important; }
+  .col-right{ display:flex !important; flex-direction:column !important; }
+  .edu-year{ display:none; }
+  .edu-row{ grid-template-columns:1fr; }
+  .ats-keywords{ position:static !important; left:auto !important; top:auto !important; opacity:1 !important; color:#f9f9f9 !important; background:transparent !important; font-size:1pt !important; margin:1mm 0 0 0 !important; padding:0 !important; display:block !important; height:auto !important; overflow:visible !important; visibility:visible !important; }
+  @page{ size:A4; margin:0; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="col-left">
+    <div class="avatar-wrap">
+      <img src="andrea-assets/Foto ilustrada.png" alt="Andrea Velasco">
+    </div>
+    <div class="left-content">
+      <img src="andrea-assets/Logo verde.png" alt="Andrea Velasco" class="cv-logo">
+      <!-- gancho del editor: título objetivo editable -->
+      <section class="job"><h3>Graphic Designer</h3></section>
+
+      <div class="left-section">
+        <div class="left-title">Contact</div>
+        <div class="contact-item"><span class="c-dot"></span>andrea.gv@outlook.com</div>
+        <div class="contact-item"><span class="c-dot"></span>+52 55 5252 9456</div>
+        <div class="contact-item"><span class="c-dot"></span>Mexico — open to remote</div>
+      </div>
+
+      <div class="left-section">
+        <div class="left-title script">skills</div>
+        <div class="skills-grid">
+          <div class="skill-item"><span class="skill-dot"></span>Digital &amp; Print Design</div>
+          <div class="skill-item"><span class="skill-dot"></span>Social Media Assets</div>
+          <div class="skill-item"><span class="skill-dot"></span>Brand Guidelines</div>
+          <div class="skill-item"><span class="skill-dot"></span>Layouts &amp; Ads</div>
+          <div class="skill-item"><span class="skill-dot"></span>Advanced Photoshop</div>
+          <div class="skill-item"><span class="skill-dot"></span>Packaging Design</div>
+          <div class="skill-item"><span class="skill-dot"></span>Advertising Campaigns</div>
+          <div class="skill-item"><span class="skill-dot"></span>Photo Retouching &amp; Compositing</div>
+          <div class="skill-item"><span class="skill-dot"></span>Editorial Design</div>
+          <div class="skill-item"><span class="skill-dot"></span>Social &amp; E-commerce Assets</div>
+          <div class="skill-item"><span class="skill-dot"></span>AI Tools for Design</div>
+          <div class="skill-item"><span class="skill-dot"></span>Project Coordination</div>
+          <div class="skill-item"><span class="skill-dot"></span>Client &amp; Vendor Communication</div>
+          <div class="skill-item"><span class="skill-dot"></span>Spanish (Native) · English</div>
+        </div>
+      </div>
+
+      <div class="qr-block">
+        <div class="qr-label">Portfolio / Contact</div>
+        <img src="andrea-assets/qr-portfolio.png" alt="QR portfolio Andrea Velasco" style="width:26mm;height:26mm;display:block;margin:0 auto;">
+      </div>
+    </div>
+  </div>
+
+  <div class="col-right">
+    <div class="right-sections">
+      <div class="right-section">
+        <div class="right-title">profile</div>
+        <div class="profile">I design digital, print and social assets that follow brand guidelines and ship on time. 6+ years across graphic design, art direction, branding, packaging and photo direction, in-house and agency. I work in Spanish and English, and I like getting into the detail so the brand stays consistent everywhere.</div>
+        <div class="kpis"><span class="kpi">Sold out in under 4 months (packaging)</span><span class="kpi">250+ graphic assets a year</span><span class="kpi">90% first-pass approval</span><span class="kpi">20+ international brands</span><span class="kpi">6+ years in design and art direction</span></div>
+      </div>
+
+      <div class="right-section">
+        <div class="right-title">experience</div>
+
+        <div class="job">
+          <div class="job-meta"><div class="job-period">2023–2026</div><div class="job-jobtitle">Graphic Designer</div><div class="job-company">Organic Nails</div></div>
+          <ul class="job-bullets">
+            <li>Led the end-to-end design of a 12-set illustrated packaging collection that <strong>sold out in under 4 months</strong>.</li>
+            <li>Ran the annual production of <strong>250+ graphic assets</strong> (branding, digital, print) with a <strong>90% first-pass approval rate</strong>.</li>
+            <li>Directed 30% of the yearly photo production: moodboards, props, model coaching, lighting and post.</li>
+            <li>Shaped branding and packaging for 2 new launches and one redesign, picked by directors over 3 other proposals.</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-meta"><div class="job-period">2022–2023</div><div class="job-jobtitle">Lead Graphic Designer</div><div class="job-company">Abeja Reyna</div></div>
+          <ul class="job-bullets">
+            <li>Planned and ran campaigns, setting the look and feel for social, print advertising and e-commerce.</li>
+            <li>Managed <strong>200+ assets a year</strong> with an <strong>85% first-pass approval rate</strong> across web, social and POS.</li>
+            <li>Redesigned digital and print ads, improving visual hierarchy and composition for stronger legibility.</li>
+            <li>Led photo direction and post-production so the product looked consistent across every sales channel.</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-meta"><div class="job-period">2021–2022</div><div class="job-jobtitle">Jr. Art Director</div><div class="job-company">Archer Troy</div></div>
+          <ul class="job-bullets">
+            <li>Led key art for <strong>2 Videocine films</strong>: creative concept, photo direction and 40+ format adaptations.</li>
+            <li>Designed the official merchandise line for the <strong>Maradona series</strong>, built for the Amazon marketplace.</li>
+            <li>Worked on art direction for 10+ film productions, from moodboard and title treatment to photomontage.</li>
+            <li>Directed portrait sessions for <strong>50+ talent profiles</strong>, handling lighting and final retouching.</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-meta"><div class="job-period">2020–2021</div><div class="job-jobtitle">Product Photographer</div><div class="job-company">Tuukul</div></div>
+          <ul class="job-bullets">
+            <li>Coordinated photo production for <strong>20+ international brands</strong> (Penguin, Pepe Jeans, Distroller, Haus) to each brand guideline.</li>
+            <li>Handled high-volume post, retouching and compositing <strong>15 assets a day</strong> for Liverpool and Amazon.</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-meta"><div class="job-period">2019–2020</div><div class="job-jobtitle">Quality Assurance Lead</div><div class="job-company">Tecnocaps</div></div>
+          <ul class="job-bullets">
+            <li>Managed regulatory filings with COFEPRIS and VUCEM, hitting a <strong>98% approval rate</strong> through careful technical review.</li>
+            <li>Oversaw Good Practices (GDP/GMP/GTP/HS) in the warehouse and on imported goods, keeping full NOM compliance.</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-meta"><div class="job-period" style="font-size:calc(6pt * var(--right-scale));font-weight:700;color:#333;letter-spacing:0.3px;text-transform:uppercase;">Also</div></div>
+          <div>
+            <div class="job-desc" style="margin-bottom:1.5mm;"><strong style="color:#222;">Documentation QA</strong> <em style="color:#5d7559;">(Evolution Process)</em> — NOM compliance for manuals, technical packaging and Good Documentation Practices (GDP).</div>
+            <div class="job-desc"><strong style="color:#222;">Administrative Coordination</strong> <em style="color:#5d7559;">(Elite Mkt)</em> — scheduling, interview communication and corporate team-building events.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-section">
+        <div class="right-title">education</div>
+        <div class="edu-row"><span class="edu-year">2021</span><span>Universidad Tres Culturas — BA, Graphic Design</span></div>
+        <div class="edu-row"><span class="edu-year">2017</span><span>IPN — BSc, Pharmaceutical Chemistry &amp; Biology (QBP)</span></div>
+        <div class="edu-row"><span class="edu-year">2012</span><span>IPN — Technical Degree, Business Administration</span></div>
+        <div class="cursos-label">Courses</div>
+        <ul class="cursos-list">
+          <li>Project Management &amp; Agile Fundamentals (Santander Open Academy)</li>
+          <li>Figma (Nicolás Montañez)</li>
+          <li>Photoshop Retouching &amp; Visual Effects (Mario Olvera); Advanced Photoshop (Carlos Oliveras)</li>
+          <li>Photography &amp; Composition (Héctor Merienda); Editorial Design in InDesign (Leandro Rodrigues)</li>
+          <li>Experimental Watercolor (Amarillo Pastel); Ink Illustration (Poni)</li>
+        </ul>
+      </div>
+
+      <div class="right-section" style="margin-bottom:0;">
+        <div class="right-title">tools</div>
+        <div class="herr-icons-row">
+          <img src="andrea-assets/Herramientas_Iconos/Ps.png" alt="Photoshop">
+          <img src="andrea-assets/Herramientas_Iconos/Lr.png" alt="Lightroom">
+          <img src="andrea-assets/Herramientas_Iconos/Ai.png" alt="Illustrator">
+          <img src="andrea-assets/Herramientas_Iconos/Id.png" alt="InDesign">
+          <img src="andrea-assets/Herramientas_Iconos/Ae.png" alt="After Effects">
+          <img src="andrea-assets/Herramientas_Iconos/Pr.png" alt="Premiere">
+          <img src="andrea-assets/Herramientas_Iconos/Firefly.png" alt="Firefly">
+          <img src="andrea-assets/Herramientas_Iconos/Adobe express.png" alt="Adobe Express">
+          <img src="andrea-assets/Herramientas_Iconos/Gemini.png" alt="Gemini">
+          <img src="andrea-assets/Herramientas_Iconos/AI Shutter.png" alt="AI Shutter">
+          <img src="andrea-assets/Herramientas_Iconos/Canva.png" alt="Canva">
+          <img src="andrea-assets/Herramientas_Iconos/Capcut.png" alt="Capcut">
+          <img src="andrea-assets/Herramientas_Iconos/Office.png" alt="Office">
+        </div>
+        <div class="herr-text" style="margin-top:3mm;">Adobe Suite (Photoshop, Illustrator, InDesign, After Effects, Premiere, Lightroom), AI design tools (Firefly, Gemini), Canva, CapCut, project tools (Trello, Monday, Asana), Office / Google Workspace</div>
+        <div class="ats-keywords" aria-hidden="false">Graphic Designer, Graphic Designer, Art Director, Senior Graphic Designer, Brand Designer, Visual Designer, brand identity, visual identity, packaging design, art direction, creative direction, Adobe Photoshop, Adobe Illustrator, Adobe InDesign, Adobe After Effects, Adobe Premiere, Adobe Lightroom, Adobe Firefly, Figma, Canva, CapCut, generative AI, AI-assisted design, social media design, content creation, photography, photo retouching, compositing, e-commerce, marketplace, campaign design, editorial design, typography, color theory, illustration, moodboard, talent direction, studio production, remote, English, Spanish, visual designs, digital, print, social media, marketing materials, graphics, layouts, creative assets, brand guidelines, presentations, advertisements, banners, brochures, fluent English, feedback, team player</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

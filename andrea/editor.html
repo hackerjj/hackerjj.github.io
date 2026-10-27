@@ -46,6 +46,25 @@
     <h2>1. Elegir CV</h2>
     <select id="picker"><option value="">— elige un CV —</option></select>
 
+    <h2 style="margin-top:18px">1.5. Ajustar tamaño de fuente</h2>
+    <div class="row"><small>Izquierda (banner)</small></div>
+    <div class="val" id="valLeftScale" style="font-size:22px">—</div>
+    <input type="range" id="sliderLeftScale" min="0.80" max="1.20" step="0.01" value="1.00" disabled />
+    <div class="row" style="justify-content:center">
+      <button class="btn-ghost" id="minusLeft" disabled>−0.01</button>
+      <input type="number" id="numLeftScale" min="0.80" max="1.20" step="0.01" value="1.00" disabled />
+      <button class="btn-ghost" id="plusLeft" disabled>+0.01</button>
+    </div>
+    <div class="row" style="margin-top:14px"><small>Derecha (contenido)</small></div>
+    <div class="val" id="valRightScale" style="font-size:22px">—</div>
+    <input type="range" id="sliderRightScale" min="0.80" max="1.20" step="0.01" value="1.00" disabled />
+    <div class="row" style="justify-content:center">
+      <button class="btn-ghost" id="minusRight" disabled>−0.01</button>
+      <input type="number" id="numRightScale" min="0.80" max="1.20" step="0.01" value="1.00" disabled />
+      <button class="btn-ghost" id="plusRight" disabled>+0.01</button>
+    </div>
+    <p class="hint">Multiplicador del tamaño de letra por lado. 1.00 = tamaño original. Los iconos, el logo y el QR no cambian.</p>
+
     <h2 style="margin-top:18px">2. Ajustar que quepa en una página</h2>
     <div class="val" id="valBig">1.41</div>
     <input type="range" id="slider" min="1.00" max="1.80" step="0.01" value="1.41" disabled />
@@ -68,6 +87,7 @@
     <p class="hint">Son invisibles al imprimir pero las leen los filtros ATS. Usa términos de la vacante que puedas defender.</p>
 
     <h2 style="margin-top:18px">5. Exportar a PDF</h2>
+    <input type="text" id="pdfName" readonly placeholder="Nombre del PDF" />
     <div class="row"><button id="print" class="btn-primary" disabled>Imprimir / Guardar como PDF</button></div>
     <div class="note">
       <strong>Cómo guardar tu PDF:</strong> dale a <em>Imprimir / Guardar como PDF</em>, elige
@@ -89,16 +109,29 @@
 (function(){
   // Lista de CVs disponibles (se llena desde el tracker via ?file=, o del arreglo CVS)
   var CVS = window.ANDREA_CVS || [];
-  var curFile="", htmlText="", curLH=1.41, curPos="", curATS="";
+  var curFile="", htmlText="", curLH=1.41, curPos="", curATS="", curLeftScale=1.00, curRightScale=1.00;
   var $=function(id){return document.getElementById(id)};
   var slider=$('slider'), num=$('num'), valBig=$('valBig'), preview=$('preview');
-  var printBtn=$('print'), posInput=$('currentPosition'), atsInput=$('atsKeywords'), picker=$('picker');
+  var printBtn=$('print'), posInput=$('currentPosition'), atsInput=$('atsKeywords'), picker=$('picker'), pdfName=$('pdfName');
+  var sliderLeftScale=$('sliderLeftScale'), numLeftScale=$('numLeftScale'), valLeftScale=$('valLeftScale');
+  var sliderRightScale=$('sliderRightScale'), numRightScale=$('numRightScale'), valRightScale=$('valRightScale');
+  var EDITOR_TITLE=document.title;
 
   function fmt(v){ return (Math.round(v*100)/100).toFixed(2); }
   function esc(v){ return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]}); }
   function readLH(t){ var m=t.match(/--print-lineheight:\s*([0-9.]+)/); return m?parseFloat(m[1]):1.41; }
   function readPos(t){ var m=t.match(/<section class="job">[\s\S]*?<h3>([\s\S]*?)<\/h3>/i); return m?m[1].replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').trim():''; }
-  function readATS(t){ var m=t.match(/<div class="ats-keywords"[^>]*>([\s\S]*?)<\/div>/i); return m?m[1].replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').trim():''; }
+  function readATS(t){ var m=t.match(/<div class="ats-keywords"[^>]*>([\s\S]*?)<\/div>/i); return m?m[1].replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').trim():''; }
+  function readScale(t,which,fallback){ var m=t.match(new RegExp('--'+which+'-scale:\\s*([0-9.]+)')); return m?parseFloat(m[1]):fallback; }
+  function applyScale(t,which,v){ var re=new RegExp('--'+which+'-scale:\\s*[0-9.]+'); return re.test(t)?t.replace(re,'--'+which+'-scale: '+fmt(v)):t; }
+  function pdfFilename(){ var base=(curFile||'cv.html').split('/').pop().replace(/\.(html?|htm)$/i,''); return base+'.pdf'; }
+  function waitForImages(doc){
+    var imgs=Array.prototype.slice.call((doc&&doc.images)||[]);
+    return Promise.all(imgs.map(function(img){
+      if(img.complete && img.naturalWidth>0) return Promise.resolve();
+      return new Promise(function(r){ img.addEventListener('load',r,{once:true}); img.addEventListener('error',r,{once:true}); });
+    }));
+  }
   function applyLH(t,v){ var s=fmt(v); t=t.replace(/--print-lineheight:\s*[0-9.]+/g,'--print-lineheight: '+s); t=t.replace(/line-height:\s*[0-9.]+\s*!important/g,'line-height:'+s+' !important'); return t; }
   function applyPos(t,p){ return t.replace(/(<section class="job">[\s\S]*?<h3>)[\s\S]*?(<\/h3>)/i,'$1'+esc(p).replace(/\n/g,' ')+'$2'); }
   function applyATS(t,k){ return t.replace(/(<div class="ats-keywords"[^>]*>)[\s\S]*?(<\/div>)/i,'$1'+esc(k).replace(/\n/g,' ')+'$2'); }
@@ -117,9 +150,15 @@
     head+=previewCss;
     return t.replace(/<head([^>]*)>/i, head);
   }
-  function refresh(){ var s=applyLH(htmlText,curLH); s=applyPos(s,curPos); s=applyATS(s,curATS); s=applyBase(s); var b=new Blob([s],{type:'text/html'}); preview.src=URL.createObjectURL(b); }
+  function refresh(){ var s=applyLH(htmlText,curLH); s=applyScale(s,'left',curLeftScale); s=applyScale(s,'right',curRightScale); s=applyPos(s,curPos); s=applyATS(s,curATS); s=applyBase(s); var b=new Blob([s],{type:'text/html'}); preview.src=URL.createObjectURL(b); pdfName.value=pdfFilename(); }
   function setVal(v,upd){ v=Math.max(1,Math.min(1.8,v)); curLH=Math.round(v*100)/100; valBig.textContent=fmt(curLH); if(upd!==false){slider.value=curLH;num.value=fmt(curLH);} if(htmlText) refresh(); }
-  function enable(on){ [slider,num,printBtn,posInput,atsInput,$('minus'),$('plus')].forEach(function(e){e.disabled=!on}); document.querySelectorAll('#quick button').forEach(function(b){b.disabled=!on}); }
+  function setScaleVal(which,v,upd){
+    v=Math.max(0.80,Math.min(1.20,v)); v=Math.round(v*100)/100;
+    if(which==='left'){ curLeftScale=v; valLeftScale.textContent=fmt(v); if(upd!==false){sliderLeftScale.value=v;numLeftScale.value=fmt(v);} }
+    else { curRightScale=v; valRightScale.textContent=fmt(v); if(upd!==false){sliderRightScale.value=v;numRightScale.value=fmt(v);} }
+    if(htmlText) refresh();
+  }
+  function enable(on){ [slider,num,printBtn,posInput,atsInput,$('minus'),$('plus'),sliderLeftScale,numLeftScale,$('minusLeft'),$('plusLeft'),sliderRightScale,numRightScale,$('minusRight'),$('plusRight')].forEach(function(e){e.disabled=!on}); document.querySelectorAll('#quick button').forEach(function(b){b.disabled=!on}); }
 
   async function loadFile(name){
     if(!name) return;
@@ -128,7 +167,9 @@
       if(!res.ok) throw new Error('HTTP '+res.status);
       htmlText=await res.text(); curFile=name;
       curPos=readPos(htmlText); curATS=readATS(htmlText); curLH=readLH(htmlText);
-      enable(true); posInput.value=curPos; atsInput.value=curATS; setVal(curLH,true);
+      curLeftScale=readScale(htmlText,'left',1.00); curRightScale=readScale(htmlText,'right',1.00);
+      enable(true); posInput.value=curPos; atsInput.value=curATS;
+      setScaleVal('left',curLeftScale,true); setScaleVal('right',curRightScale,true); setVal(curLH,true);
       if(picker.value!==name) picker.value=name;
     }catch(e){ alert('No se pudo cargar '+name+' ('+e.message+')'); }
   }
@@ -144,7 +185,25 @@
   document.querySelectorAll('#quick button').forEach(function(b){ b.addEventListener('click', function(){ setVal(parseFloat(b.dataset.v),true); }); });
   posInput.addEventListener('input', function(){ curPos=posInput.value; if(htmlText) refresh(); });
   atsInput.addEventListener('input', function(){ curATS=atsInput.value; if(htmlText) refresh(); });
-  printBtn.addEventListener('click', function(){ preview.contentWindow.focus(); preview.contentWindow.print(); });
+  sliderLeftScale.addEventListener('input', function(){ setScaleVal('left',parseFloat(sliderLeftScale.value),false); numLeftScale.value=fmt(curLeftScale); });
+  numLeftScale.addEventListener('input', function(){ var v=parseFloat(numLeftScale.value); if(!isNaN(v)){ setScaleVal('left',v,false); sliderLeftScale.value=curLeftScale; } });
+  $('plusLeft').addEventListener('click', function(){ setScaleVal('left',curLeftScale+0.01,true); });
+  $('minusLeft').addEventListener('click', function(){ setScaleVal('left',curLeftScale-0.01,true); });
+  sliderRightScale.addEventListener('input', function(){ setScaleVal('right',parseFloat(sliderRightScale.value),false); numRightScale.value=fmt(curRightScale); });
+  numRightScale.addEventListener('input', function(){ var v=parseFloat(numRightScale.value); if(!isNaN(v)){ setScaleVal('right',v,false); sliderRightScale.value=curRightScale; } });
+  $('plusRight').addEventListener('click', function(){ setScaleVal('right',curRightScale+0.01,true); });
+  $('minusRight').addEventListener('click', function(){ setScaleVal('right',curRightScale-0.01,true); });
+  printBtn.addEventListener('click', async function(){
+    if(!curFile) return;
+    try{
+      await waitForImages(preview.contentDocument);
+      var filename=pdfFilename();
+      preview.contentDocument.title=filename;
+      document.title=filename;
+      window.onafterprint=function(){ document.title=EDITOR_TITLE; };
+    }catch(e){}
+    preview.contentWindow.focus(); preview.contentWindow.print();
+  });
 
   // Escalar la hoja A4 para que entre completa en el panel (210mm = 793.7px @96dpi, 297mm = 1122.5px)
   var A4W=793.7, A4H=1122.5;

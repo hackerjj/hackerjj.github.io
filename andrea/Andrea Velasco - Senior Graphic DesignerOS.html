@@ -6,7 +6,7 @@
 <title>Andrea Velasco — Senior Graphic Designer</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{ --print-lineheight: 1.41; }
+:root{ --print-lineheight: 1.41; --left-scale: 1; --right-scale: 1; }
 * { margin:0; padding:0; box-sizing:border-box; }
 body{ font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; background:#d0d0d0; display:flex; justify-content:center; align-items:flex-start; padding:20px; }
 .page{ width:210mm; height:297mm; background:#f9f9f9; display:grid; grid-template-columns:64mm 1fr; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.18); }
@@ -16,46 +16,46 @@ body{ font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; backgroun
 .left-content{ padding:5mm 6mm 0 7mm; display:flex; flex-direction:column; flex:1; }
 .cv-logo{ width:100%; max-width:52mm; height:auto; display:block; margin-bottom:0; line-height:0; }
 section.job{ display:block; margin:0; }
-section.job h3{ font-size:6pt; letter-spacing:3.5px; text-transform:uppercase; color:#5d7559; margin:0 0 4mm 0; font-weight:500; }
+section.job h3{ font-size:calc(6pt * var(--left-scale)); letter-spacing:3.5px; text-transform:uppercase; color:#5d7559; margin:0 0 4mm 0; font-weight:500; }
 .left-section{ margin-bottom:4mm; }
-.left-title{ font-size:6pt; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#5d7559; margin-bottom:2.5mm; padding-bottom:1.5mm; border-bottom:0.5px solid #b8b4af; }
-.left-title.script{ font-family:'Playfair Display',Georgia,serif; font-style:italic; font-weight:400; font-size:10pt; letter-spacing:0; text-transform:none; border-bottom:none; padding-bottom:0; margin-bottom:2mm; }
-.contact-item{ font-size:7pt; color:#444; line-height:1.9; display:flex; align-items:center; gap:5px; }
+.left-title{ font-size:calc(6pt * var(--left-scale)); font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#5d7559; margin-bottom:2.5mm; padding-bottom:1.5mm; border-bottom:0.5px solid #b8b4af; }
+.left-title.script{ font-family:'Playfair Display',Georgia,serif; font-style:italic; font-weight:400; font-size:calc(10pt * var(--left-scale)); letter-spacing:0; text-transform:none; border-bottom:none; padding-bottom:0; margin-bottom:2mm; }
+.contact-item{ font-size:calc(7pt * var(--left-scale)); color:#444; line-height:1.9; display:flex; align-items:center; gap:5px; }
 .c-dot{ width:5px; height:5px; background:#5d7559; border-radius:50%; flex-shrink:0; }
 .skills-grid{ display:flex; flex-direction:column; gap:2px; }
-.skill-item{ display:flex; align-items:center; gap:6px; font-size:7pt; color:#333; line-height:1.45; }
+.skill-item{ display:flex; align-items:center; gap:6px; font-size:calc(7pt * var(--left-scale)); color:#333; line-height:1.45; }
 .skill-dot{ width:5px; height:5px; border-radius:50%; background:#5d7559; flex-shrink:0; }
 .col-right{ padding:9mm 9mm 8mm 8mm; display:flex; flex-direction:column; justify-content:space-between; }
 .right-sections{ display:flex; flex-direction:column; flex:1; }
 .right-section{ margin-bottom:3.5mm; }
-.right-title{ font-family:'Cormorant Garamond','Playfair Display',Georgia,serif; font-style:italic; font-size:14pt; font-weight:400; color:#5d7559; border-bottom:0.5px solid #b0b0b0; padding-bottom:1.5mm; margin-bottom:2.5mm; line-height:1; }
-.profile{ font-size:7.4pt; color:#444; line-height:1.5; margin-bottom:3mm; }
+.right-title{ font-family:'Cormorant Garamond','Playfair Display',Georgia,serif; font-style:italic; font-size:calc(14pt * var(--right-scale)); font-weight:400; color:#5d7559; border-bottom:0.5px solid #b0b0b0; padding-bottom:1.5mm; margin-bottom:2.5mm; line-height:1; }
+.profile{ font-size:calc(7.4pt * var(--right-scale)); color:#444; line-height:1.5; margin-bottom:3mm; }
 .kpis{ display:flex; flex-wrap:wrap; gap:3px; margin-bottom:3.5mm; }
-.kpi{ font-size:6pt; font-weight:600; color:#3f5a3b; background:rgba(93,117,89,0.1); border:0.5px solid rgba(93,117,89,0.35); border-radius:9px; padding:2px 7px; white-space:nowrap; }
+.kpi{ font-size:calc(6pt * var(--right-scale)); font-weight:600; color:#3f5a3b; background:rgba(93,117,89,0.1); border:0.5px solid rgba(93,117,89,0.35); border-radius:9px; padding:2px 7px; white-space:nowrap; }
 .job{ display:grid; grid-template-columns:26mm 1fr; gap:3mm; margin-bottom:2.3mm; }
 .job:last-child{ margin-bottom:0; }
 .job-meta{ padding-top:0.3mm; }
-.job-period{ font-size:6.5pt; font-weight:700; color:#222; line-height:1.5; }
-.job-jobtitle{ font-size:6.5pt; color:#333; line-height:1.4; }
-.job-company{ font-size:6.5pt; font-style:italic; color:#5d7559; line-height:1.4; }
-.job-desc{ font-size:7pt; color:#444; line-height:1.55; }
+.job-period{ font-size:calc(6.5pt * var(--right-scale)); font-weight:700; color:#222; line-height:1.5; }
+.job-jobtitle{ font-size:calc(6.5pt * var(--right-scale)); color:#333; line-height:1.4; }
+.job-company{ font-size:calc(6.5pt * var(--right-scale)); font-style:italic; color:#5d7559; line-height:1.4; }
+.job-desc{ font-size:calc(7pt * var(--right-scale)); color:#444; line-height:1.55; }
 .job-bullets{ list-style:none; padding:0; margin:0; }
-.job-bullets li{ font-size:6.8pt; color:#444; line-height:1.45; padding-left:7px; position:relative; margin-bottom:0.4mm; }
+.job-bullets li{ font-size:calc(6.8pt * var(--right-scale)); color:#444; line-height:1.45; padding-left:7px; position:relative; margin-bottom:0.4mm; }
 .job-bullets li::before{ content:"–"; position:absolute; left:0; color:#5d7559; }
 .job-bullets li strong{ color:#222; font-weight:600; }
-.edu-row{ display:grid; grid-template-columns:9mm 1fr; gap:3mm; margin-bottom:0.8mm; font-size:7pt; color:#333; line-height:1.4; }
+.edu-row{ display:grid; grid-template-columns:9mm 1fr; gap:3mm; margin-bottom:0.8mm; font-size:calc(7pt * var(--right-scale)); color:#333; line-height:1.4; }
 .edu-year{ font-weight:700; color:#222; }
-.cursos-label{ font-size:6pt; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#444; margin:2.5mm 0 1.5mm 0; }
+.cursos-label{ font-size:calc(6pt * var(--right-scale)); font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#444; margin:2.5mm 0 1.5mm 0; }
 .cursos-list{ list-style:none; }
-.cursos-list li{ font-size:6.8pt; color:#444; line-height:1.55; padding-left:8px; position:relative; text-align:justify; hyphens:auto; }
+.cursos-list li{ font-size:calc(6.8pt * var(--right-scale)); color:#444; line-height:1.55; padding-left:8px; position:relative; text-align:justify; hyphens:auto; }
 .cursos-list li::before{ content:"–"; position:absolute; left:0; color:#5d7559; }
 .herr-icons-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:2mm; width:100%; flex-wrap:nowrap; }
 .herr-icons-row img{ height:14px; width:auto; object-fit:contain; display:block; flex-shrink:1; }
-.herr-text{ font-size:6pt; color:#777; line-height:1.5; }
+.herr-text{ font-size:calc(6pt * var(--right-scale)); color:#777; line-height:1.5; }
 .qr-block{ text-align:center; padding-top:7mm; }
-.qr-label{ font-size:5.5pt; letter-spacing:2px; text-transform:uppercase; color:#5d7559; font-weight:700; margin-bottom:2mm; }
+.qr-label{ font-size:calc(5.5pt * var(--left-scale)); letter-spacing:2px; text-transform:uppercase; color:#5d7559; font-weight:700; margin-bottom:2mm; }
 .qr-block svg{ display:block; margin:0 auto; }
-.ats-keywords{ font-size:5.5pt; color:#ccc; line-height:1.6; margin-top:2mm; }
+.ats-keywords{ position:absolute; left:-9999px; top:-9999px; opacity:0; font-size:5.5pt; }
 @media print{
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   html,body{ line-height:1.41 !important; background:none !important; padding:0 !important; margin:0 !important; }
@@ -64,7 +64,7 @@ section.job h3{ font-size:6pt; letter-spacing:3.5px; text-transform:uppercase; c
   .col-right{ display:flex !important; flex-direction:column !important; }
   .edu-year{ display:none; }
   .edu-row{ grid-template-columns:1fr; }
-  .ats-keywords{ color:#f9f9f9 !important; font-size:1pt !important; line-height:0 !important; height:0 !important; overflow:hidden !important; display:block !important; visibility:hidden !important; }
+  .ats-keywords{ position:static !important; left:auto !important; top:auto !important; opacity:1 !important; color:#f9f9f9 !important; background:transparent !important; font-size:1pt !important; margin:1mm 0 0 0 !important; padding:0 !important; display:block !important; height:auto !important; overflow:visible !important; visibility:visible !important; }
   @page{ size:A4; margin:0; }
 }
 </style>
@@ -78,7 +78,7 @@ section.job h3{ font-size:6pt; letter-spacing:3.5px; text-transform:uppercase; c
     </div>
     <div class="left-content">
       <img src="andrea-assets/Logo verde.png" alt="Andrea Velasco" class="cv-logo">
-      <!-- gancho del editor: posicion objetivo editable -->
+      <!-- gancho del editor: título objetivo editable -->
       <section class="job"><h3>Senior Graphic Designer</h3></section>
 
       <div class="left-section">
@@ -120,7 +120,7 @@ section.job h3{ font-size:6pt; letter-spacing:3.5px; text-transform:uppercase; c
       <div class="right-section">
         <div class="right-title">profile</div>
         <div class="profile">I design branded content for beauty: product and packaging, digital assets and campaign production, concept to execution. 6+ years across graphic design, art direction, branding, packaging and photo direction, in-house and agency. I work in Spanish and English, and I like getting into the detail so the brand stays consistent everywhere.</div>
-        <div class="kpis"><span class="kpi">Sold-out en &lt;4 meses (packaging)</span><span class="kpi">250+ piezas graficas al ano</span><span class="kpi">90% aprobacion en 1a entrega</span><span class="kpi">20+ marcas internacionales</span><span class="kpi">6+ anos en diseno y arte</span></div>
+        <div class="kpis"><span class="kpi">Sold out in under 4 months (packaging)</span><span class="kpi">250+ graphic assets a year</span><span class="kpi">90% first-pass approval</span><span class="kpi">20+ international brands</span><span class="kpi">6+ years in design and art direction</span></div>
       </div>
 
       <div class="right-section">
@@ -173,7 +173,7 @@ section.job h3{ font-size:6pt; letter-spacing:3.5px; text-transform:uppercase; c
         </div>
 
         <div class="job">
-          <div class="job-meta"><div class="job-period" style="font-size:6pt;font-weight:700;color:#333;letter-spacing:0.3px;text-transform:uppercase;">Also</div></div>
+          <div class="job-meta"><div class="job-period" style="font-size:calc(6pt * var(--right-scale));font-weight:700;color:#333;letter-spacing:0.3px;text-transform:uppercase;">Also</div></div>
           <div>
             <div class="job-desc" style="margin-bottom:1.5mm;"><strong style="color:#222;">Documentation QA</strong> <em style="color:#5d7559;">(Evolution Process)</em> — NOM compliance for manuals, technical packaging and Good Documentation Practices (GDP).</div>
             <div class="job-desc"><strong style="color:#222;">Administrative Coordination</strong> <em style="color:#5d7559;">(Elite Mkt)</em> — scheduling, interview communication and corporate team-building events.</div>

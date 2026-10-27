@@ -2,25 +2,34 @@
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
-<title>Job Tracker — Andrea Velasco</title>
+<meta name="andrea-mode" content="pages"/>
+<title>Job Tracker v2 — Andrea Velasco</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%235d7559'/%3E%3Crect x='8' y='6' width='16' height='20' rx='2' fill='%23fff'/%3E%3Cpath d='M11 15l3 3 6-7' fill='none' stroke='%235d7559' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style>
 :root{
-  --bg:#141a16; --card:#1e261f; --border:#333f35; --accent:#7a9b74;
-  --green:#8fb986; --yellow:#d9b76a; --red:#d98a7a; --text:#f0f4ee; --muted:#9aa89a;
+  --bg:#141a16; --card:#1e261f; --border:#333f35; --accent:#7a9b74; --brand:#5d7559;
+  --green:#8fb986; --yellow:#d9b76a; --red:#d98a7a; --purple:#a99bc9;
+  --text:#f0f4ee; --muted:#9aa89a; --chip:#24331f; --field:#0d130e;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font:14px/1.5 'Segoe UI',system-ui,sans-serif;padding:24px}
 .ico{display:inline-block;width:1em;height:1em;vertical-align:-0.125em;margin-right:4px}
 h1{font-size:24px;font-weight:700;margin-bottom:4px}
-.subtitle{color:var(--muted);font-size:13px;margin-bottom:20px}
-.editor-note{background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;line-height:1.6}
-.editor-note code{background:#0d130e;color:var(--green);padding:2px 7px;border-radius:5px;font-size:12px}
+.subtitle{color:var(--muted);font-size:13px;margin-bottom:18px}
+.editor-note{background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:13px;line-height:1.6}
+.editor-note code{background:var(--field);color:var(--green);padding:2px 7px;border-radius:5px;font-size:12px}
+.store-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:20px;font-size:12.5px;color:var(--muted)}
+.store-bar .msg{flex:1;min-width:260px;line-height:1.5}
+.store-bar .msg b{color:var(--text)}
+.store-bar .warn{color:var(--yellow);font-weight:600}
+.btn{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:7px 12px;font:600 12px/1 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.btn:hover{border-color:var(--green);color:var(--green)}
+.btn-danger:hover{border-color:var(--red);color:var(--red)}
 .stats{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
 .stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 18px;min-width:120px}
 .stat-num{font-size:28px;font-weight:700;color:var(--accent)}
-.stat-num.green{color:var(--green)}
+.stat-num.green{color:var(--green)}.stat-num.yellow{color:var(--yellow)}.stat-num.red{color:var(--red)}.stat-num.purple{color:var(--purple)}.stat-num.muted{color:var(--muted)}
 .stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 .tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
 .tab{background:transparent;border:none;color:var(--muted);font:600 14px/1 'Segoe UI',sans-serif;padding:12px 18px;cursor:pointer;border-bottom:3px solid transparent;transition:.15s}
@@ -30,21 +39,107 @@ h1{font-size:24px;font-weight:700;margin-bottom:4px}
 .panel{display:none}.panel.active{display:block}
 .section{margin-bottom:28px}
 .section-title{font-size:15px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--green)}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;padding:8px 10px;background:var(--card);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)}
-td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+.section-note{font-size:11.5px;color:var(--muted);margin:0 0 10px;line-height:1.5}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+th{position:relative;text-align:left;padding:8px 10px;background:var(--card);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);overflow:hidden;text-overflow:ellipsis}
+th .col-resizer{position:absolute;top:0;right:0;width:7px;height:100%;cursor:col-resize;user-select:none;touch-action:none}
+th .col-resizer:hover,th .col-resizer.dragging{background:var(--accent)}
+td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top;word-wrap:break-word;overflow-wrap:break-word}
 tr:hover td{background:rgba(143,185,134,0.06)}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
-.tag{font-size:10px;border-radius:5px;padding:1px 6px;white-space:nowrap;border:1px solid}
-.tag-remote{color:var(--green);border-color:var(--green)}
-.tag-visa{color:var(--yellow);border-color:var(--yellow)}
-.flag{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.5px}
+small.cita{display:block;color:var(--muted);font-size:11px;margin-top:4px;font-style:italic}
+.mod{display:inline-block;font-size:10px;font-weight:700;border-radius:5px;padding:1px 6px;white-space:nowrap;border:1px solid}
+.mod-global{color:var(--green);border-color:var(--green)}
+.mod-latam{color:var(--accent);border-color:var(--accent)}
+.mod-visa{color:var(--yellow);border-color:var(--yellow)}
+.mod-pend{color:var(--muted);border-color:var(--muted)}
 .fit{display:inline-flex;align-items:center;gap:4px}
 .fit-bar{width:44px;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
 .fit-fill{height:100%;border-radius:3px;background:var(--green)}
+.fit-med .fit-fill{background:var(--yellow)}
 .cv-btn{display:inline-block;background:var(--green);color:#0f160f;font-weight:700;font-size:11px;padding:4px 10px;border-radius:6px;white-space:nowrap}
 .cv-btn:hover{text-decoration:none;opacity:.9}
-.note{color:var(--muted);font-size:12px;margin:-8px 0 20px;line-height:1.5}
+.row-btn{margin-top:5px;display:block;background:transparent;border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer;font-family:inherit}
+.row-btn.applied{border:1px solid var(--green);color:var(--green)}
+.row-btn.discard{border:1px solid var(--red);color:var(--red)}
+.status{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;white-space:nowrap;border:1px solid}
+.status-applied{background:var(--chip);color:var(--green);border-color:var(--green)}
+.status-review{background:#2d2610;color:var(--yellow);border-color:var(--yellow)}
+.status-interview{background:#231d33;color:var(--purple);border-color:var(--purple)}
+.status-rejected{background:#2d1a15;color:var(--red);border-color:var(--red)}
+.move{display:block;margin-top:6px;background:var(--field);color:var(--text);border:1px solid var(--border);border-radius:6px;font:12px 'Segoe UI',sans-serif;padding:3px 6px;max-width:100%}
+.v3-note{cursor:pointer}
+.v3-note:hover{background:rgba(143,185,134,.08)}
+.v3-note-editing{outline:2px solid var(--accent);outline-offset:-2px;background:var(--bg) !important;border-radius:4px;cursor:text}
+.v3-learned-no{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--red);background:rgba(217,138,122,.12);border:1px solid var(--red);border-radius:6px;padding:2px 8px}
+.v3-learned-yes{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--green);background:rgba(143,185,134,.12);border:1px solid var(--green);border-radius:6px;padding:2px 8px}
+.v3-learned-yes::before{content:"\2713"}
+.by-asst{display:inline-block;margin-top:4px;font-size:10px;color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:1px 6px}
+.empty-row td{color:var(--muted);font-style:italic;padding:16px 10px;text-align:center}
+.jt-subtable-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px;font-weight:700;margin:4px 0 8px;color:var(--green)}
+.jt-subtable-head .cnt{font-size:11px;background:var(--border);color:var(--text);border-radius:10px;padding:1px 7px}
+.jt-subtable-note{font-size:11px;font-weight:400;color:var(--muted);flex-basis:100%}
+.jt-aplicar-sub{margin-bottom:18px}
+.jt-filters{display:flex;flex-wrap:wrap;gap:14px 18px;align-items:flex-end;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin:14px 0 18px}
+.jt-f-group{display:flex;flex-direction:column;gap:6px}
+.jt-f-lbl{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.jt-filters input[type=text],.jt-filters select{background:var(--field);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 11px;font-size:13px;min-width:170px}
+.jt-filters input[type=text]:focus,.jt-filters select:focus{outline:none;border-color:var(--green)}
+.jt-f-fit{min-width:200px}
+.jt-f-fit input[type=range]{width:100%;accent-color:var(--green);cursor:pointer}
+#jt-f-fit-val{color:var(--green);font-weight:900}
+.jt-f-btns{display:flex;gap:6px}
+.jt-sort{background:var(--field);border:1px solid var(--border);border-radius:8px;color:var(--muted);padding:8px 12px;font-weight:700;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.jt-sort:hover{border-color:var(--green);color:var(--text)}
+.jt-sort.active{background:var(--green);border-color:var(--green);color:#0f160f}
+.jt-arrow{font-size:10px}
+.jt-reset{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);padding:8px 14px;font-weight:700;font-size:12px;cursor:pointer}
+.jt-reset:hover{border-color:var(--red);color:var(--red)}
+.jt-count{display:block;margin-top:6px;font-size:11px;color:var(--muted)}
+.jt-count b{color:var(--green)}
+tr.jt-hidden{display:none}
+/* Modal propio (descartar / marcar aplicada / restablecer) */
+.dz-backdrop{position:fixed;inset:0;background:rgba(5,9,6,.72);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.dz-backdrop.open{display:flex}
+.dz-modal{background:var(--card);border:1px solid var(--border);border-radius:14px;width:100%;max-width:460px;box-shadow:0 24px 60px rgba(0,0,0,.5);overflow:hidden}
+.dz-head{display:flex;align-items:center;gap:9px;padding:16px 20px;background:linear-gradient(90deg,rgba(217,138,122,.16),rgba(217,138,122,.04));border-bottom:1px solid var(--border);color:var(--red)}
+.dz-head h3{font-size:15px;font-weight:700;margin:0}
+.dz-head .ico{width:18px;height:18px}
+.dz-body{padding:18px 20px}
+.dz-sub{font-size:13px;color:var(--text);margin:0 0 12px;line-height:1.5}
+.dz-body textarea{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:10px 12px;font:14px/1.5 'Segoe UI',system-ui,sans-serif;resize:vertical;min-height:74px;outline:none}
+.dz-body textarea:focus{border-color:var(--accent)}
+.dz-hint{font-size:11px;color:var(--muted);margin:8px 0 0}
+.dz-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px 18px}
+.dz-foot button{border-radius:9px;padding:8px 16px;font:600 13px/1 'Segoe UI',sans-serif;cursor:pointer;border:1px solid var(--border)}
+.dz-cancel{background:transparent;color:var(--muted)}
+.dz-cancel:hover{color:var(--text);border-color:var(--muted)}
+.dz-confirm{background:var(--red);color:#1a0f0c;border-color:var(--red)}
+.dz-modal.mode-applied .dz-head{background:linear-gradient(90deg,rgba(143,185,134,.16),rgba(143,185,134,.04));color:var(--green)}
+.dz-modal.mode-applied .dz-confirm{background:var(--green);border-color:var(--green);color:#0f160f}
+.dz-modal.mode-reset textarea,.dz-modal.mode-reset .dz-hint{display:none}
+/* Chip de versión + changelog */
+.ver-chip{font:600 12px/1 'Segoe UI',sans-serif;vertical-align:middle;background:var(--chip);color:var(--green);border:1px solid var(--green);border-radius:10px;padding:3px 9px;margin-left:8px;cursor:pointer}
+.ver-chip:hover{background:var(--green);color:#0f160f}
+.cl-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
+.cl-backdrop.open{display:flex}
+.cl-modal{background:var(--card);border:1px solid var(--border);border-radius:12px;max-width:720px;width:100%;max-height:85vh;overflow:auto;color:var(--text);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.cl-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--card)}
+.cl-head h3{font-size:15px;font-weight:700}
+.cl-close{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 9px;cursor:pointer;font-family:inherit}
+.cl-close:hover{color:var(--text);border-color:var(--accent)}
+.cl-body{padding:14px 18px;font-size:12.5px;line-height:1.55}
+.cl-ver{margin:0 0 16px}
+.cl-ver h4{font-size:13px;margin-bottom:4px;color:var(--green)}
+.cl-ver h4 small{color:var(--muted);font-weight:500;margin-left:8px}
+.cl-ver ul{margin:4px 0 0 18px;padding:0}
+.cl-ver li{margin:3px 0}
+.cl-tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;margin-right:6px;vertical-align:middle;border:1px solid}
+.cl-add{background:var(--chip);color:var(--green);border-color:var(--green)}
+.cl-fix{background:#2d2610;color:var(--yellow);border-color:var(--yellow)}
+.cl-chg{background:#1a2a2a;color:var(--accent);border-color:var(--accent)}
+.how td{padding:10px}
+.how code{background:var(--field);color:var(--green);padding:2px 7px;border-radius:5px}
 @media(max-width:768px){body{padding:12px}.stats{flex-direction:column}table{font-size:12px}}
 </style>
 </head>
@@ -53,120 +148,1287 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 <h1>
   <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
   Job Tracker — Andrea Velasco
+  <button type="button" class="ver-chip" onclick="toggleChangelog(true)" title="Ver historial de cambios" aria-haspopup="dialog">v2.0</button>
 </h1>
 <div class="subtitle">Diseño gráfico · Dirección de arte · Branding | Foco: remoto sin reubicación (y con visa cuando la den) — Reino Unido, España, Estados Unidos, Canadá | andrea.gv@outlook.com</div>
 
 <div class="editor-note">
   <strong>Cómo abrir y editar un CV:</strong> cada vacante tiene su propio CV con su título.
-  El botón <strong>Abrir CV</strong> lo abre en el <strong>editor</strong>, donde puedes ajustar que quepa en una página (line-height),
-  cambiar la <strong>posición</strong>, editar las <strong>ATS keywords</strong>, <strong>guardar</strong> en el mismo archivo e <strong>imprimir a PDF</strong>.<br/>
-  Dale a <strong>Abrir CV</strong> y se abre el editor en el navegador: ajustas, y con <strong>Imprimir / Guardar como PDF</strong> bajas tu CV listo para aplicar.
+  El botón <strong>Abrir CV</strong> lo abre en el <strong>editor</strong>: ajustas el tamaño de letra y el line-height para que quepa en una página,
+  cambias el <strong>puesto</strong>, editas las <strong>ATS keywords</strong> e <strong>imprimes a PDF</strong>.
+  <span data-mode="local"><br/>Versión local: primero corre el servidor una vez con <code>python3 cv/_editor-server.py</code>; ahí también puedes <strong>guardar</strong> en el mismo archivo.</span>
+  <span data-mode="pages"><br/>Versión en línea: el editor ajusta y exporta tu PDF; los cambios del CV van a tu PDF, no se guardan en la página.</span>
+</div>
+
+<div class="store-bar" id="store-bar">
+  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;flex:none"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg>
+  <div class="msg">Tus cambios (aplicadas, descartes, notas) se guardan <b>en este navegador</b>. Exporta el JSON para respaldarlos o para mandárselos a Jair. <span id="store-status"></span></div>
+  <button type="button" class="btn" id="btn-export"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Exportar estado (JSON)</button>
+  <button type="button" class="btn" id="btn-import"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>Importar estado (JSON)</button>
+  <input type="file" id="import-file" accept="application/json,.json" style="display:none"/>
+  <button type="button" class="btn btn-danger" id="btn-reset"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Restablecer</button>
 </div>
 
 <div class="stats">
-  <div class="stat"><div class="stat-num">21</div><div class="stat-label">CVs listos</div></div>
-  <div class="stat"><div class="stat-num green">0</div><div class="stat-label">Aplicadas</div></div>
-  <div class="stat"><div class="stat-num">4</div><div class="stat-label">Países</div></div>
-  <div class="stat"><div class="stat-num">0</div><div class="stat-label">Entrevistas</div></div>
-</div>
-
-<div class="note">
-  Vacantes reales de buscadores (Indeed + LinkedIn), últimas 48–96 h (8–9 oct 2026). Cada CV lleva el título de su vacante, perfil adaptado, KPI chips y ATS keywords.
-  En las vacantes donde pude leer la descripción completa (Deepgram, CELLA, Beverly Hills, EVERSANA, Movers+Shakers, Ensemble, Whatnot, ONE/SIZE, Arrowmac, Wounded Warrior), las ATS keywords usan los términos literales del JD.
-  <strong>Redwire Space se quitó</strong>: exige ciudadanía/residencia US (ITAR), no elegible desde México.
-  Verifica siempre en la publicación que siga abierta, la modalidad y si da visa antes de aplicar.
+  <div class="stat"><div class="stat-num" id="stat-aplicar">0</div><div class="stat-label">Por aplicar</div></div>
+  <div class="stat"><div class="stat-num green" id="stat-aplicadas">0</div><div class="stat-label">Aplicadas</div></div>
+  <div class="stat"><div class="stat-num yellow" id="stat-revision">0</div><div class="stat-label">En revisión activa</div></div>
+  <div class="stat"><div class="stat-num purple" id="stat-entrevistas">0</div><div class="stat-label">Entrevistas</div></div>
+  <div class="stat"><div class="stat-num red" id="stat-rechazadas">0</div><div class="stat-label">Rechazadas</div></div>
+  <div class="stat"><div class="stat-num muted" id="stat-descartadas">0</div><div class="stat-label">Descartadas</div></div>
 </div>
 
 <div class="tabs">
-  <button class="tab active" onclick="showTab('aplicar',this)">Por aplicar<span class="cnt">21</span></button>
-  <button class="tab" onclick="showTab('aplicadas',this)">Aplicadas<span class="cnt">0</span></button>
-  <button class="tab" onclick="showTab('como',this)">Cómo usar</button>
+  <button class="tab active" onclick="showTab('aplicar',this)"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Por aplicar<span class="cnt" id="cnt-aplicar">0</span></button>
+  <button class="tab" onclick="showTab('aplicadas',this)"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Aplicadas<span class="cnt" id="cnt-aplicadas">0</span></button>
+  <button class="tab" onclick="showTab('revision',this)"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>En revisión activa<span class="cnt" id="cnt-revision">0</span></button>
+  <button class="tab" onclick="showTab('entrevistas',this)"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Entrevistas<span class="cnt" id="cnt-entrevistas">0</span></button>
+  <button class="tab" onclick="showTab('rechazadas',this)"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg>Rechazadas<span class="cnt" id="cnt-rechazadas">0</span></button>
+  <button class="tab" onclick="showTab('descartadas',this)"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Descartadas<span class="cnt" id="cnt-descartadas">0</span></button>
+  <button class="tab" onclick="showTab('como',this)"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Cómo usar</button>
 </div>
 
+<!-- ============ TAB: POR APLICAR ============ -->
 <div class="panel active" id="aplicar">
-
   <div class="section">
-    <div class="section-title">Estados Unidos — remoto</div>
-    <table>
-      <thead><tr><th>Empresa</th><th>Puesto (= título del CV)</th><th>Ubicación / $</th><th>Modalidad</th><th>Fit</th><th>CV (editor)</th><th>Vacante</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Deepgram</strong></td><td>Senior Brand Designer</td><td>Remoto · US · $150K–$190K</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:85%"></span></span>85</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Brand%20DesignerD.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=01cbbde3ea75789d" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>DualEntry</strong></td><td>Brand Designer</td><td>Remoto · US · $160K–$190K</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:82%"></span></span>82</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Brand%20DesignerDE.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=1be47ef816f8594a" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>Beverly Hills Rejuvenation Center</strong></td><td>Creative Graphic Designer &amp; Brand Strategist</td><td>Remoto · US · $50K–$70K</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:84%"></span></span>84</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Creative%20Graphic%20DesignerB.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=1df9167b1fb066e4" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>CELLA</strong></td><td>Graphic Designer</td><td>Remoto · US · $44–$48/h</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:80%"></span></span>80</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Graphic%20DesignerC.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=60ecf404ae620e82" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>EVERSANA</strong></td><td>Senior Art Director</td><td>Remoto · US · $78K–$113K</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:83%"></span></span>83</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Art%20DirectorEV.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=7d607f6b3948cdeb" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>Movers+Shakers</strong></td><td>Art Director, B2B</td><td>Remoto · US (LA)</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:80%"></span></span>80</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Art%20Director%20B2BMS.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=c504f9f6f634206e" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>Ensemble Performing Arts</strong></td><td>Marketing &amp; Graphic Design Specialist</td><td>Remoto · US · $60K–$70K</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:79%"></span></span>79</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Marketing%20Graphic%20DesignerEP.html" target="_blank">Abrir CV</a></td><td><a href="https://www.indeed.com/viewjob?jk=27194fb2fd06fb55" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>Wounded Warrior Project</strong></td><td>Senior Graphic Designer</td><td>Remoto · US</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:80%"></span></span>80</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Graphic%20DesignerWW.html" target="_blank">Abrir CV</a></td><td><a href="https://www.linkedin.com/jobs/view/4473022854" target="_blank">LinkedIn</a></td></tr>
-        <tr><td><strong>Arrowmac</strong></td><td>Senior Graphic Designer</td><td>Remoto · US (OC, CA)</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:79%"></span></span>79</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Graphic%20DesignerAR.html" target="_blank">Abrir CV</a></td><td><a href="https://www.linkedin.com/jobs/view/4475462676" target="_blank">LinkedIn</a></td></tr>
-        <tr><td><strong>Whatnot</strong></td><td>Senior Art Director, 2D Illustration</td><td>Remoto · US</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:78%"></span></span>78</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Art%20Director%20IllustrationW.html" target="_blank">Abrir CV</a></td><td><a href="https://www.linkedin.com/jobs/view/4466147735" target="_blank">LinkedIn</a></td></tr>
-        <tr><td><strong>ONE/SIZE Beauty</strong></td><td>Senior Graphic Designer</td><td>Remoto · US (Culver City)</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:82%"></span></span>82</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Graphic%20DesignerOS.html" target="_blank">Abrir CV</a></td><td><a href="https://www.linkedin.com/jobs/view/4465698829" target="_blank">LinkedIn</a></td></tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="section-note">Cada fila es una vacante con su CV. La columna <strong>Modalidad</strong> dice por qué Andrea puede aplicar desde México (REMOTO GLOBAL, REMOTO LATAM o VISA SPONSORSHIP) con la cita del JD que lo prueba. "POR VERIFICAR" quiere decir que todavía falta confirmarlo en la publicación.</div>
 
-  <div class="section">
-    <div class="section-title">Reino Unido</div>
-    <table>
-      <thead><tr><th>Empresa</th><th>Puesto (= título del CV)</th><th>Ubicación</th><th>Modalidad</th><th>Fit</th><th>CV (editor)</th><th>Vacante</th></tr></thead>
-      <tbody>
-        <tr><td><strong>StudioXAG</strong></td><td>Freelance Senior Graphic Designer</td><td>Londres, UK</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:84%"></span></span>84</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Graphic%20DesignerSX.html" target="_blank">Abrir CV</a></td><td><a href="https://uk.indeed.com/viewjob?jk=d1117faea9c10bc1" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>End Clothing</strong></td><td>Junior Art Director</td><td>Londres, UK</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:82%"></span></span>82</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Junior%20Art%20DirectorEN.html" target="_blank">Abrir CV</a></td><td><a href="https://uk.indeed.com/viewjob?jk=8c03c65b64a6acef" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>UnyBrands</strong></td><td>Midweight Graphic Designer</td><td>Hemel Hempstead, UK</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:85%"></span></span>85</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Midweight%20Graphic%20DesignerUB.html" target="_blank">Abrir CV</a></td><td><a href="https://uk.indeed.com/viewjob?jk=ed27dfc995e26f73" target="_blank">Indeed</a></td></tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="jt-filters" id="jt-filters">
+      <div class="jt-f-group">
+        <label class="jt-f-lbl" for="jt-f-company"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3"/></svg>Empresa</label>
+        <input type="text" id="jt-f-company" placeholder="Filtrar por empresa..." autocomplete="off">
+      </div>
+      <div class="jt-f-group">
+        <label class="jt-f-lbl" for="jt-f-role"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Puesto</label>
+        <input type="text" id="jt-f-role" placeholder="Art Director, Brand..." autocomplete="off">
+      </div>
+      <div class="jt-f-group">
+        <label class="jt-f-lbl" for="jt-f-location"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Ubicación</label>
+        <input type="text" id="jt-f-location" placeholder="País, ciudad, remoto..." autocomplete="off">
+      </div>
+      <div class="jt-f-group">
+        <label class="jt-f-lbl" for="jt-f-mod"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Modalidad</label>
+        <select id="jt-f-mod">
+          <option value="">Todas</option>
+          <option value="REMOTO GLOBAL">REMOTO GLOBAL</option>
+          <option value="REMOTO LATAM">REMOTO LATAM</option>
+          <option value="VISA SPONSORSHIP">VISA SPONSORSHIP</option>
+          <option value="POR VERIFICAR">POR VERIFICAR</option>
+        </select>
+      </div>
+      <div class="jt-f-group jt-f-fit">
+        <label class="jt-f-lbl" for="jt-f-fit"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Fit mínimo: <span id="jt-f-fit-val">0</span></label>
+        <input type="range" id="jt-f-fit" min="0" max="100" step="5" value="0">
+      </div>
+      <div class="jt-f-group">
+        <span class="jt-f-lbl"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M6 12h12M9 18h6"/></svg>Ordenar por</span>
+        <div class="jt-f-btns">
+          <button type="button" class="jt-sort" data-sort="pub">Publicada <span class="jt-arrow"></span></button>
+          <button type="button" class="jt-sort" data-sort="found">Encontrada <span class="jt-arrow"></span></button>
+          <button type="button" class="jt-sort" data-sort="fit">Fit <span class="jt-arrow"></span></button>
+        </div>
+      </div>
+      <div class="jt-f-group">
+        <span class="jt-f-lbl"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg>Solo con CV</span>
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--muted)"><input type="checkbox" id="jt-f-hascv"> Mostrar solo vacantes con CV</label>
+      </div>
+      <div class="jt-f-group">
+        <button type="button" class="jt-reset" id="jt-f-reset" title="Limpiar filtros">Limpiar</button>
+        <span class="jt-count" id="jt-f-count"></span>
+      </div>
+    </div>
 
-  <div class="section">
-    <div class="section-title">España</div>
-    <table>
-      <thead><tr><th>Empresa</th><th>Puesto (= título del CV)</th><th>Ubicación</th><th>Modalidad</th><th>Fit</th><th>CV (editor)</th><th>Vacante</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Preverisk</strong></td><td>Diseñador Gráfico</td><td>Palma de Mallorca, ES</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:80%"></span></span>80</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Disenador%20GraficoPV.html" target="_blank">Abrir CV</a></td><td><a href="https://es.indeed.com/viewjob?jk=a47eeebb43541da3" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>Deluxe Media</strong></td><td>Lead Graphic Designer</td><td>Madrid, ES</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:84%"></span></span>84</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Lead%20Graphic%20DesignerDX.html" target="_blank">Abrir CV</a></td><td><a href="https://es.indeed.com/viewjob?jk=3497a1dd5305b748" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>Deluxe Media</strong></td><td>Graphic Designer</td><td>Madrid, ES</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:82%"></span></span>82</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Graphic%20DesignerDX2.html" target="_blank">Abrir CV</a></td><td><a href="https://es.indeed.com/viewjob?jk=ec76c901a7e073d0" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>Silicon HR</strong></td><td>Junior Creative &amp; Brand Designer</td><td>Madrid, ES</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:81%"></span></span>81</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Creative%20Brand%20DesignerSH.html" target="_blank">Abrir CV</a></td><td><a href="https://es.indeed.com/viewjob?jk=4d0c9a86af740c2b" target="_blank">Indeed</a></td></tr>
-      </tbody>
-    </table>
+    <div id="aplicar-groups"></div>
   </div>
-
-  <div class="section">
-    <div class="section-title">Canadá</div>
-    <table>
-      <thead><tr><th>Empresa</th><th>Puesto (= título del CV)</th><th>Ubicación</th><th>Modalidad</th><th>Fit</th><th>CV (editor)</th><th>Vacante</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Contempo Media</strong></td><td>Graphic &amp; Web Designer</td><td>Toronto, ON, CA</td><td><span class="tag tag-remote">REMOTO</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:82%"></span></span>82</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Graphic%20Web%20DesignerCM.html" target="_blank">Abrir CV</a></td><td><a href="https://ca.indeed.com/viewjob?jk=b6004658f0204ac8" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>DECIEM (NIOD / The Ordinary)</strong></td><td>Senior Manager, Art &amp; Design</td><td>Toronto, ON, CA</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:80%"></span></span>80</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Senior%20Art%20Design%20ManagerDC.html" target="_blank">Abrir CV</a></td><td><a href="https://ca.indeed.com/viewjob?jk=a7106b0992069709" target="_blank">Indeed</a></td></tr>
-        <tr><td><strong>Walmart Canada</strong></td><td>Associate Graphic Designer</td><td>Mississauga, ON, CA</td><td><span class="flag">HÍBRIDO · verificar visa</span></td><td><span class="fit"><span class="fit-bar"><span class="fit-fill" style="width:81%"></span></span>81</span></td><td><a class="cv-btn" href="editor.html?file=Andrea%20Velasco%20-%20Associate%20Graphic%20DesignerWM.html" target="_blank">Abrir CV</a></td><td><a href="https://ca.indeed.com/viewjob?jk=42721c4f97e5c88b" target="_blank">Indeed</a></td></tr>
-      </tbody>
-    </table>
-  </div>
-
 </div>
 
-<div class="panel" id="aplicadas">
-  <div class="section"><div class="section-title">Aplicadas</div>
-  <p style="color:var(--muted)">Aún no hay vacantes aplicadas. Cuando apliques a una, muévela aquí con la fecha.</p></div>
-</div>
+<!-- ============ TABS DEL LOG ============ -->
+<div class="panel" id="aplicadas"><div class="section">
+  <div class="section-title"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Aplicadas</div>
+  <div class="section-note">Las notas se editan con doble clic. Usa "Mover a…" cuando la vacante avance o la rechacen.</div>
+  <table id="aplicadas-table"><thead><tr><th>Empresa</th><th>Puesto</th><th>Fecha</th><th>CV usado</th><th>Fuente</th><th>Notas</th><th>Estado</th></tr></thead><tbody></tbody></table>
+</div></div>
+<div class="panel" id="revision"><div class="section">
+  <div class="section-title"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>En revisión activa</div>
+  <table id="revision-table"><thead><tr><th>Empresa</th><th>Puesto</th><th>Fecha</th><th>CV usado</th><th>Fuente</th><th>Notas</th><th>Estado</th></tr></thead><tbody></tbody></table>
+</div></div>
+<div class="panel" id="entrevistas"><div class="section">
+  <div class="section-title"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Entrevistas</div>
+  <table id="entrevistas-table"><thead><tr><th>Empresa</th><th>Puesto</th><th>Fecha</th><th>CV usado</th><th>Fuente</th><th>Notas</th><th>Estado</th></tr></thead><tbody></tbody></table>
+</div></div>
+<div class="panel" id="rechazadas"><div class="section">
+  <div class="section-title"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg>Rechazadas</div>
+  <table id="rechazadas-table"><thead><tr><th>Empresa</th><th>Puesto</th><th>Fecha</th><th>CV usado</th><th>Fuente</th><th>Notas</th><th>Estado</th></tr></thead><tbody></tbody></table>
+</div></div>
 
-<div class="panel" id="como">
-  <div class="section"><div class="section-title">Cómo usar este tracker</div>
-    <table><tbody>
-      <tr><td>2</td><td>Abre una vacante con el enlace de la derecha y revisa que siga abierta, la modalidad (remoto) y si da visa.</td></tr>
-      <tr><td>3</td><td>Dale clic a <strong>Abrir CV</strong>: se abre en el editor con el título de esa vacante. Ahí ajustas line-height para que quepa en una página, cambias la posición y las ATS keywords, <strong>Guardar</strong> sobreescribe el mismo archivo, e <strong>Imprimir / Exportar PDF</strong> lo guarda en PDF A4.</td></tr>
-      <tr><td>4</td><td>Aplica en el portal de la empresa. Luego mueve esa fila a <strong>Aplicadas</strong> con la fecha.</td></tr>
-      <tr><td>5</td><td>Para más vacantes recientes usa <strong>Andrea-Contexto-Busqueda-ChatGPT.md</strong> (en esta carpeta): pégalo en ChatGPT con los links de LinkedIn filtrados por 48 h.</td></tr>
-    </tbody></table>
+<!-- ============ TAB: DESCARTADAS ============ -->
+<div class="panel" id="descartadas"><div class="section">
+  <div class="section-title"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Descartadas — aprender de los errores de búsqueda.</div>
+  <div class="section-note">Vacantes que Andrea descartó con el motivo que escribió (doble clic para editarlo). El asistente lee estos motivos <strong>antes</strong> de cada búsqueda para no volver a traer algo así, y marca "revisado" cuando ya aprendió la lección. Las que dicen "descartada por verificación" las quitó el asistente al revisar el JD.</div>
+  <table id="descartadas-table"><thead><tr><th>Empresa</th><th>Puesto</th><th>Fecha descarte</th><th>CV</th><th>Fuente</th><th>Motivo (lo escribe Andrea)</th><th>Revisado por asistente</th></tr></thead><tbody></tbody></table>
+</div></div>
+
+<!-- ============ TAB: CÓMO USAR ============ -->
+<div class="panel" id="como"><div class="section">
+  <div class="section-title">Cómo usar este tracker</div>
+  <table class="how"><tbody>
+    <tr data-mode="local"><td style="width:30px">1</td><td>Corre el servidor del editor una vez: en la terminal, <code>python3 cv/_editor-server.py</code>. Déjalo abierto.</td></tr>
+    <tr><td style="width:30px">2</td><td>Abre la vacante con el enlace de la columna Fuente y revisa que siga abierta, que sea remota desde México o que dé visa.</td></tr>
+    <tr><td>3</td><td>Dale clic a <strong>Abrir CV</strong>: se abre en el editor con el título de esa vacante. Ajustas tamaño de letra y line-height para que quepa en una página, cambias el puesto y las ATS keywords, e <strong>Imprimir / Guardar como PDF</strong> lo baja en A4.</td></tr>
+    <tr><td>4</td><td>Aplica en el portal de la empresa y luego dale a <strong>Marcar aplicada</strong> (la nota es opcional). Si no te interesa, dale a <strong>Descartar</strong> y escribe por qué.</td></tr>
+    <tr><td>5</td><td>Cuando la vacante avance, usa <strong>Mover a…</strong> en la pestaña Aplicadas (En revisión, Entrevista o Rechazada).</td></tr>
+    <tr><td>6</td><td>De vez en cuando dale a <strong>Exportar estado (JSON)</strong> y mándale el archivo a Jair. Así se respalda y el asistente aprende de tus descartes.</td></tr>
+  </tbody></table>
+</div></div>
+
+<!-- Modal propio reutilizable: descartar / marcar aplicada / restablecer -->
+<div class="dz-backdrop" id="action-modal" role="dialog" aria-modal="true" aria-labelledby="dz-title">
+  <div class="dz-modal">
+    <div class="dz-head" id="dz-head">
+      <svg class="ico" id="dz-icon-discard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      <svg class="ico" id="dz-icon-applied" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><polyline points="20 6 9 17 4 12"/></svg>
+      <h3 id="dz-title">Descartar vacante</h3>
+    </div>
+    <div class="dz-body">
+      <p class="dz-sub" id="dz-sub">¿Por qué la descartas? Lo leo antes de la próxima búsqueda para no volver a traerte algo así.</p>
+      <textarea id="dz-motivo" rows="4" aria-label="Motivo"></textarea>
+      <p class="dz-hint" id="dz-hint">Escribe el motivo con tus palabras. Es tu forma de enseñarme qué no traerte.</p>
+    </div>
+    <div class="dz-foot">
+      <button type="button" class="dz-cancel" id="dz-cancel">Cancelar</button>
+      <button type="button" class="dz-confirm" id="dz-confirm">Descartar</button>
+    </div>
   </div>
 </div>
+
+<!-- ============ Changelog: chip clicable + historial ============
+     REGLA: cada cambio en la app sube la versión aquí (chip en el h1 + entrada nueva arriba). -->
+<div class="cl-backdrop" id="changelog" role="dialog" aria-modal="true" aria-labelledby="cl-title" onclick="if(event.target===this)toggleChangelog(false)">
+  <div class="cl-modal">
+    <div class="cl-head">
+      <h3 id="cl-title"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>Historial de versiones — Job Tracker de Andrea</h3>
+      <button type="button" class="cl-close" onclick="toggleChangelog(false)">Cerrar</button>
+    </div>
+    <div class="cl-body" id="changelog-body">
+      <div class="cl-ver">
+        <h4>v2.0 <small>26 oct 2026 · 18:40</small></h4>
+        <ul>
+          <li><span class="cl-tag cl-add">NUEVO</span>El tracker toma las funciones del tracker 3.0 de Jair: contadores en vivo, pestañas Por aplicar / Aplicadas / En revisión activa / Entrevistas / Rechazadas / Descartadas, filtros (empresa, puesto, ubicación, modalidad, fit mínimo, solo con CV), orden por Publicada, Encontrada o Fit, y columnas que se pueden ensanchar arrastrando el borde del encabezado (doble clic las restablece).</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Botones <strong>Marcar aplicada</strong> (nota opcional) y <strong>Descartar</strong> (motivo obligatorio) con un modal propio. Cmd/Ctrl+Enter confirma y Escape cancela.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Pestaña <strong>Descartadas</strong> con el motivo que escribe Andrea y la columna "Revisado por asistente" ("sin revisar" hasta que el asistente aprende de ese descarte).</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Columna <strong>Modalidad</strong> (REMOTO GLOBAL / REMOTO LATAM / VISA SPONSORSHIP / POR VERIFICAR) con la cita del JD que lo prueba.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Los cambios se guardan en el navegador (también en GitHub Pages, donde no hay servidor). Botones Exportar e Importar estado en JSON para respaldar o mandárselo a Jair, y Restablecer.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>"Mover a…" en las pestañas del log, para pasar una vacante a En revisión, Entrevista o Rechazada sin editar el HTML.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Notas editables con doble clic (Enter guarda, Escape sale).</li>
+          <li><span class="cl-tag cl-chg">CAMBIO</span>Las vacantes viven en un bloque de datos dentro del HTML y la página arma las tablas; la versión local y la de Pages usan el mismo archivo. "Abrir CV" abre el editor local (localhost:8777) o el editor en línea según dónde se abra el tracker.</li>
+          <li><span class="cl-tag cl-chg">CAMBIO</span>Wounded Warrior Project (híbrido en Jacksonville), Arrowmac (cerrada), Whatnot (hay que vivir cerca de sus oficinas en US) y ONE/SIZE Beauty (debe estar en Los Ángeles) pasaron a Descartadas con la cita del JD.</li>
+          <li><span class="cl-tag cl-fix">FIX</span>Las ATS keywords ya salen en el PDF. El CSS de impresión las ocultaba con visibility:hidden y alto cero; ahora se imprimen en 1pt con el color del papel.</li>
+          <li><span class="cl-tag cl-fix">FIX</span>Los KPI chips de los CVs en inglés ya no salen en español sin acentos.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Editor en línea: sliders "1.5. Ajustar tamaño de fuente" (banner y contenido), nombre de PDF sugerido y espera a que carguen foto y QR antes de imprimir.</li>
+        </ul>
+      </div>
+      <div class="cl-ver">
+        <h4>v1.0 <small>09 oct 2026 · 03:44</small></h4>
+        <ul>
+          <li><span class="cl-tag cl-add">NUEVO</span>Primer tracker de Andrea: 21 vacantes de Indeed y LinkedIn (Estados Unidos, Reino Unido, España y Canadá), cada una con su CV y botón "Abrir CV" al editor.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Versión en GitHub Pages con editor en línea para exportar el PDF.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DATOS ============
+     Fuente de verdad de las vacantes (la escribe el asistente). Los cambios de Andrea
+     viven en localStorage (andrea-tracker:v2:state) y se aplican encima de estos datos. -->
+<script type="application/json" id="andrea-jobs">
+[
+ {
+  "id": "and-blending-disenador-grafico-sr",
+  "empresa": "The Blending Studio",
+  "puesto": "Diseñador/a Gráfico Sr",
+  "grupo": "global",
+  "pais": "MX",
+  "ubicacion": "Remoto · México · freelance por iguala mensual",
+  "modalidad": "REMOTO LATAM",
+  "cita": "Colaboración freelance, remota y recurrente, por iguala mensual.",
+  "publicada": "2026-10-26",
+  "encontrada": "2026-10-26 20:30",
+  "fit": 82,
+  "cv": "Andrea Velasco - Disenador GraficoTB.html",
+  "url": "https://www.linkedin.com/jobs/view/4483779230",
+  "fuente": "LinkedIn",
+  "motivo": "Estudio en México, senior, varias marcas. Se aplica mandando portafolio a info@theblending.studio con asunto “Quiero ser un Blender”.",
+  "estado": "aplicar",
+  "fecha_estado": "",
+  "nota": "",
+  "motivo_descarte": "",
+  "learned": null
+ },
+ {
+  "id": "and-realhires-graphic-designer",
+  "empresa": "Real Hires",
+  "puesto": "Graphic Designer",
+  "grupo": "global",
+  "pais": "LATAM",
+  "ubicacion": "Remoto · Latin America · full-time",
+  "modalidad": "REMOTO LATAM",
+  "cita": "Ubicación de la vacante: Latin America. “100% Remote, full-time position”.",
+  "publicada": "2026-10-26",
+  "encontrada": "2026-10-26 20:30",
+  "fit": 80,
+  "cv": "Andrea Velasco - Graphic DesignerRH.html",
+  "url": "https://www.linkedin.com/jobs/view/4478511264",
+  "fuente": "LinkedIn",
+  "motivo": "Branding, marketing y redes para varios clientes; pide Adobe CC y Canva. Más de 200 aplicantes.",
+  "estado": "aplicar",
+  "fecha_estado": "",
+  "nota": "",
+  "motivo_descarte": "",
+  "learned": null
+ },
+ {
+  "id": "and-designity-senior-graphic-designer",
+  "empresa": "Designity",
+  "puesto": "Senior Graphic Designer",
+  "grupo": "global",
+  "pais": "LATAM",
+  "ubicacion": "Remoto · Latin America · full-time",
+  "modalidad": "REMOTO LATAM",
+  "cita": "Ubicación de la vacante: Latin America. “A fully remote environment with structured virtual collaboration”.",
+  "publicada": "2026-10-26",
+  "encontrada": "2026-10-26 20:30",
+  "fit": 86,
+  "cv": "Andrea Velasco - Senior Graphic DesignerDG.html",
+  "url": "https://www.linkedin.com/jobs/view/4481475857",
+  "fuente": "LinkedIn",
+  "motivo": "Branding, packaging y campañas con IA; pide 6+ años. Muy buen match.",
+  "estado": "aplicar",
+  "fecha_estado": "",
+  "nota": "",
+  "motivo_descarte": "",
+  "learned": null
+ },
+ {
+  "id": "and-remoteleverage-graphic-designer",
+  "empresa": "Remote Leverage",
+  "puesto": "Graphic Designer",
+  "grupo": "global",
+  "pais": "LATAM",
+  "ubicacion": "Remoto · Latin America · USD 1,400–2,500/mes",
+  "modalidad": "REMOTO LATAM",
+  "cita": "“We help US businesses hire applicants from various countries for REMOTE job opportunities”. Ubicación: Latin America.",
+  "publicada": "2026-10-26",
+  "encontrada": "2026-10-26 20:30",
+  "fit": 72,
+  "cv": "Andrea Velasco - Graphic DesignerRL.html",
+  "url": "https://www.linkedin.com/jobs/view/4483763418",
+  "fuente": "LinkedIn",
+  "motivo": "Agencia de staffing; pide 1+ año. Sueldo bajo para su nivel, sirve como opción rápida.",
+  "estado": "aplicar",
+  "fecha_estado": "",
+  "nota": "",
+  "motivo_descarte": "",
+  "learned": null
+ },
+ {
+  "id": "and-connaxis-senior-production-artist",
+  "empresa": "Connaxis",
+  "puesto": "Senior Production Artist",
+  "grupo": "global",
+  "pais": "LATAM",
+  "ubicacion": "Remoto · LATAM · USD",
+  "modalidad": "REMOTO LATAM",
+  "cita": "“Connaxis · Remote (LATAM) · Full-time · USD” y “Fully remote work across LATAM”.",
+  "publicada": "2026-10-26",
+  "encontrada": "2026-10-26 20:30",
+  "fit": 76,
+  "cv": "Andrea Velasco - Senior Production ArtistCX.html",
+  "url": "https://www.linkedin.com/jobs/view/4481495202",
+  "fuente": "LinkedIn",
+  "motivo": "Arte final e impresión (InDesign, prepress); pide inglés y español. Rol de producción, no de concepto.",
+  "estado": "aplicar",
+  "fecha_estado": "",
+  "nota": "",
+  "motivo_descarte": "",
+  "learned": null
+ },
+ {
+  "id": "and-scalearmy-senior-web-brand-designer",
+  "empresa": "Scale Army Careers",
+  "puesto": "Senior Web & Brand Designer",
+  "grupo": "global",
+  "pais": "LATAM",
+  "ubicacion": "Remoto · LATAM · contrato · horario PST",
+  "modalidad": "REMOTO LATAM",
+  "cita": "“This role is open to candidates based in LATAM, Africa, and Eastern Europe”.",
+  "publicada": "2026-10-26",
+  "encontrada": "2026-10-26 20:30",
+  "fit": 68,
+  "cv": "Andrea Velasco - Senior Web Brand DesignerSA.html",
+  "url": "https://www.linkedin.com/jobs/view/4483251054",
+  "fuente": "LinkedIn",
+  "motivo": "Brand + web en Figma con IA. Ojo: pide diseñar sitios y landing pages; Andrea tiene Figma pero poco web.",
+  "estado": "aplicar",
+  "fecha_estado": "",
+  "nota": "",
+  "motivo_descarte": "",
+  "learned": null
+ },
+ {
+  "id": "and-hiredremoteli-packaging-designer",
+  "empresa": "Hired Remoteli",
+  "puesto": "Packaging & Licensed Accessories Designer",
+  "grupo": "global",
+  "pais": "LATAM",
+  "ubicacion": "Remoto · LATAM · contractor · 9–18 h ET",
+  "modalidad": "REMOTO LATAM",
+  "cita": "“Location: LATAM - (Remote)” y “Type: Contractor”.",
+  "publicada": "2026-10-26",
+  "encontrada": "2026-10-26 20:30",
+  "fit": 80,
+  "cv": "Andrea Velasco - Packaging DesignerHR.html",
+  "url": "https://www.linkedin.com/jobs/view/4450388333",
+  "fuente": "LinkedIn",
+  "motivo": "Packaging y merch con licencia (encaja con Organic Nails y la línea de Maradona). Pide CV en inglés y portafolio.",
+  "estado": "aplicar",
+  "fecha_estado": "",
+  "nota": "",
+  "motivo_descarte": "",
+  "learned": null
+ },
+ {
+  "id": "and-benrey-graphic-designer",
+  "empresa": "Benrey",
+  "puesto": "Graphic Designer",
+  "grupo": "global",
+  "pais": "Global",
+  "ubicacion": "Remoto · cualquier país",
+  "modalidad": "REMOTO GLOBAL",
+  "cita": "“Fully remote job - work from anywhere you want”. Himalayas: sin restricción de ubicación.",
+  "publicada": "2026-10-25",
+  "encontrada": "2026-10-26 20:30",
+  "fit": 66,
+  "cv": "Andrea Velasco - Graphic DesignerBN.html",
+  "url": "https://himalayas.app/companies/benrey/jobs/graphic-designer-7490713897",
+  "fuente": "Himalayas",
+  "motivo": "Diseño con IA para marketing. Ojo: pide experiencia en iGaming / apuestas, que Andrea no tiene.",
+  "estado": "aplicar",
+  "fecha_estado": "",
+  "nota": "",
+  "motivo_descarte": "",
+  "learned": null
+ },
+ {
+  "id": "and-brndwgn-senior-graphic-designer",
+  "empresa": "BRND WGN",
+  "puesto": "Senior Graphic Designer",
+  "grupo": "global",
+  "pais": "Global",
+  "ubicacion": "Remoto · horario 7–17 h ET · €40K+",
+  "modalidad": "REMOTO GLOBAL",
+  "cita": "“Location: Remote-first (optional office access in Malta)”. Himalayas: sin restricción de ubicación.",
+  "publicada": "2026-10-25",
+  "encontrada": "2026-10-26 20:30",
+  "fit": 80,
+  "cv": "Andrea Velasco - Senior Graphic DesignerBW.html",
+  "url": "https://himalayas.app/companies/brnd-wgn/jobs/senior-graphic-designer-3040146958",
+  "fuente": "Himalayas",
+  "motivo": "Agencia de Malta que trabaja para nmbl (Nueva York): Nespresso, Canon. Pide 5–8 años en marca y campañas.",
+  "estado": "aplicar",
+  "fecha_estado": "",
+  "nota": "",
+  "motivo_descarte": "",
+  "learned": null
+ },
+ {
+  "id": "and-brndwgn-graphic-motion-designer",
+  "empresa": "BRND WGN",
+  "puesto": "Mid-Level Graphic & Motion Designer",
+  "grupo": "global",
+  "pais": "Global",
+  "ubicacion": "Remoto · horario 7–17 h ET · €40K+",
+  "modalidad": "REMOTO GLOBAL",
+  "cita": "“Location: Remote-first (optional office access in Malta)”. Himalayas: sin restricción de ubicación.",
+  "publicada": "2026-10-25",
+  "encontrada": "2026-10-26 20:30",
+  "fit": 72,
+  "cv": "Andrea Velasco - Graphic Motion DesignerBW.html",
+  "url": "https://himalayas.app/companies/brnd-wgn/jobs/mid-level-graphic-motion-designer-363864368",
+  "fuente": "Himalayas",
+  "motivo": "Misma agencia; más peso en motion (After Effects). Pide 4–6 años.",
+  "estado": "aplicar",
+  "fecha_estado": "",
+  "nota": "",
+  "motivo_descarte": "",
+  "learned": null
+ },
+ {
+  "id": "and-costar-brand-designer",
+  "empresa": "Co–Star",
+  "puesto": "Brand Designer",
+  "grupo": "global",
+  "pais": "Global",
+  "ubicacion": "Remoto · cualquier país · freelance",
+  "modalidad": "REMOTO GLOBAL",
+  "cita": "“Fully remote, anywhere. No travel required”.",
+  "publicada": "2026-10-25",
+  "encontrada": "2026-10-26 20:30",
+  "fit": 78,
+  "cv": "Andrea Velasco - Brand DesignerCS.html",
+  "url": "https://himalayas.app/companies/co-star/jobs/brand-designer",
+  "fuente": "Himalayas",
+  "motivo": "App de astrología de Nueva York. Freelance part-time al inicio; piden campañas y diseño editorial. Se aplica mandando portafolio.",
+  "estado": "aplicar",
+  "fecha_estado": "",
+  "nota": "",
+  "motivo_descarte": "",
+  "learned": null
+ },
+ {
+  "id": "and-deepgram-senior-brand-designer",
+  "empresa": "Deepgram",
+  "puesto": "Senior Brand Designer",
+  "grupo": "us",
+  "pais": "US",
+  "ubicacion": "Remoto · US · $150K–$190K",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Dice remoto, sin geografía confirmada.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 85,
+  "cv": "Andrea Velasco - Senior Brand DesignerD.html",
+  "url": "https://www.indeed.com/viewjob?jk=01cbbde3ea75789d",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Solo US: el JD de Indeed dice \"USA - Remote\" (publicada 7 oct). No acepta candidatos fuera de US.",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-dualentry-brand-designer",
+  "empresa": "DualEntry",
+  "puesto": "Brand Designer",
+  "grupo": "us",
+  "pais": "US",
+  "ubicacion": "Remoto · US · $160K–$190K",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Dice remoto, sin geografía confirmada.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 82,
+  "cv": "Andrea Velasco - Brand DesignerDE.html",
+  "url": "https://www.indeed.com/viewjob?jk=1be47ef816f8594a",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Ya no aparece en Indeed. En su Ashby el puesto \"Brand Designer\" dice \"Remote (EU)\" (12 oct): solo Europa.",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-bhrc-creative-graphic-designer",
+  "empresa": "Beverly Hills Rejuvenation Center",
+  "puesto": "Creative Graphic Designer & Brand Strategist",
+  "grupo": "us",
+  "pais": "US",
+  "ubicacion": "Remoto · US · $50K–$70K",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Dice remoto, sin geografía confirmada.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 84,
+  "cv": "Andrea Velasco - Creative Graphic DesignerB.html",
+  "url": "https://www.indeed.com/viewjob?jk=1df9167b1fb066e4",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Ya no aparece en Indeed (posible cerrada). Empresa de US con \"remote\" sin geografía = US-only.",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-cella-graphic-designer",
+  "empresa": "CELLA",
+  "puesto": "Graphic Designer",
+  "grupo": "us",
+  "pais": "US",
+  "ubicacion": "Remoto · US · $44–$48/h",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Dice remoto, sin geografía confirmada.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 80,
+  "cv": "Andrea Velasco - Graphic DesignerC.html",
+  "url": "https://www.indeed.com/viewjob?jk=60ecf404ae620e82",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Ya no aparece en Indeed (posible cerrada). Empresa de US con \"remote\" sin geografía = US-only.",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-eversana-senior-art-director",
+  "empresa": "EVERSANA",
+  "puesto": "Senior Art Director",
+  "grupo": "us",
+  "pais": "US",
+  "ubicacion": "Remoto · US · $78K–$113K",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Dice remoto, sin geografía confirmada.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 83,
+  "cv": "Andrea Velasco - Senior Art DirectorEV.html",
+  "url": "https://www.indeed.com/viewjob?jk=7d607f6b3948cdeb",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Solo US: \"This role is eligible for hire in select U.S. locations\".",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-moversshakers-art-director-b2b",
+  "empresa": "Movers+Shakers",
+  "puesto": "Art Director, B2B",
+  "grupo": "us",
+  "pais": "US",
+  "ubicacion": "Remoto · US (LA)",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Dice remoto, sin geografía confirmada.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 80,
+  "cv": "Andrea Velasco - Art Director B2BMS.html",
+  "url": "https://www.indeed.com/viewjob?jk=c504f9f6f634206e",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Freelance en Los Ángeles; el JD no da geografía ni visa. Empresa de US = US-only.",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-ensemble-marketing-graphic-design",
+  "empresa": "Ensemble Performing Arts",
+  "puesto": "Marketing & Graphic Design Specialist",
+  "grupo": "us",
+  "pais": "US",
+  "ubicacion": "Remoto · US · $60K–$70K",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Dice remoto, sin geografía confirmada.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 79,
+  "cv": "Andrea Velasco - Marketing Graphic DesignerEP.html",
+  "url": "https://www.indeed.com/viewjob?jk=27194fb2fd06fb55",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Ya no aparece en Indeed (posible cerrada). Empresa de US con \"remote\" sin geografía = US-only.",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-wwp-senior-graphic-designer",
+  "empresa": "Wounded Warrior Project",
+  "puesto": "Senior Graphic Designer",
+  "grupo": "us",
+  "pais": "US",
+  "ubicacion": "Jacksonville, FL · US",
+  "modalidad": "POR VERIFICAR",
+  "cita": "flexible hybrid work schedule (three days in the office ...)",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 80,
+  "cv": "Andrea Velasco - Senior Graphic DesignerWW.html",
+  "url": "https://www.linkedin.com/jobs/view/4473022854",
+  "fuente": "LinkedIn",
+  "motivo": "Verificada el 26 oct 2026 con la API pública de LinkedIn.",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "No es remoto: el JD pide horario híbrido con tres días en oficina en Jacksonville, FL. Cita: \"flexible hybrid work schedule (three days in the office ...)\".",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-arrowmac-senior-graphic-designer",
+  "empresa": "Arrowmac",
+  "puesto": "Senior Graphic Designer",
+  "grupo": "us",
+  "pais": "US",
+  "ubicacion": "Orange County, CA · US",
+  "modalidad": "POR VERIFICAR",
+  "cita": "No longer accepting applications",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 79,
+  "cv": "Andrea Velasco - Senior Graphic DesignerAR.html",
+  "url": "https://www.linkedin.com/jobs/view/4475462676",
+  "fuente": "LinkedIn",
+  "motivo": "Verificada el 26 oct 2026 con la API pública de LinkedIn.",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Vacante cerrada. LinkedIn muestra: \"No longer accepting applications\".",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-whatnot-senior-art-director-2d",
+  "empresa": "Whatnot",
+  "puesto": "Senior Art Director, 2D Illustration",
+  "grupo": "us",
+  "pais": "US",
+  "ubicacion": "SF / NY / Seattle / LA · US",
+  "modalidad": "POR VERIFICAR",
+  "cita": "must live within commuting distance of our San Francisco, New York, Seattle or Los Angeles hubs",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 78,
+  "cv": "Andrea Velasco - Senior Art Director IllustrationW.html",
+  "url": "https://www.linkedin.com/jobs/view/4466147735",
+  "fuente": "LinkedIn",
+  "motivo": "Verificada el 26 oct 2026 con la API pública de LinkedIn.",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "US-only: hay que vivir cerca de sus oficinas. Cita: \"must live within commuting distance of our San Francisco, New York, Seattle or Los Angeles hubs\".",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-onesize-senior-graphic-designer",
+  "empresa": "ONE/SIZE Beauty",
+  "puesto": "Senior Graphic Designer",
+  "grupo": "us",
+  "pais": "US",
+  "ubicacion": "Culver City, CA · US",
+  "modalidad": "POR VERIFICAR",
+  "cita": "Must be based in Los Angeles",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 82,
+  "cv": "Andrea Velasco - Senior Graphic DesignerOS.html",
+  "url": "https://www.linkedin.com/jobs/view/4465698829",
+  "fuente": "LinkedIn",
+  "motivo": "Verificada el 26 oct 2026 con la API pública de LinkedIn.",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Híbrido y US-only. Citas: \"Must be based in Los Angeles\" y \"hybrid 2 day per week ... Culver City\".",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-studioxag-freelance-senior-graphic",
+  "empresa": "StudioXAG",
+  "puesto": "Freelance Senior Graphic Designer",
+  "grupo": "uk",
+  "pais": "UK",
+  "ubicacion": "Londres, UK",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Ubicación Londres; falta confirmar right to work o remoto desde fuera.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 84,
+  "cv": "Andrea Velasco - Senior Graphic DesignerSX.html",
+  "url": "https://uk.indeed.com/viewjob?jk=d1117faea9c10bc1",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Pide ir al estudio: \"open to remote or hybrid candidates to work when needed from our studios in East London\".",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-endclothing-junior-art-director",
+  "empresa": "End Clothing",
+  "puesto": "Junior Art Director",
+  "grupo": "uk",
+  "pais": "UK",
+  "ubicacion": "Londres, UK",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Ubicación Londres; falta confirmar right to work o remoto desde fuera.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 82,
+  "cv": "Andrea Velasco - Junior Art DirectorEN.html",
+  "url": "https://uk.indeed.com/viewjob?jk=8c03c65b64a6acef",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Ya no aparece en Indeed UK (posible cerrada). Puesto en Reino Unido sin visa.",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-unybrands-midweight-graphic",
+  "empresa": "UnyBrands",
+  "puesto": "Midweight Graphic Designer",
+  "grupo": "uk",
+  "pais": "UK",
+  "ubicacion": "Hemel Hempstead, UK",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Híbrido según el listado; verificar visa.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 85,
+  "cv": "Andrea Velasco - Midweight Graphic DesignerUB.html",
+  "url": "https://uk.indeed.com/viewjob?jk=ed27dfc995e26f73",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "No es remoto: Indeed lo marca presencial en Hemel Hempstead (UK), sin visa.",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-preverisk-disenador-grafico",
+  "empresa": "Preverisk",
+  "puesto": "Diseñador Gráfico",
+  "grupo": "es",
+  "pais": "ES",
+  "ubicacion": "Palma de Mallorca, ES",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Dice remoto; falta confirmar si exige residir en España.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 80,
+  "cv": "Andrea Velasco - Disenador GraficoPV.html",
+  "url": "https://es.indeed.com/viewjob?jk=a47eeebb43541da3",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Ya no aparece en Indeed España (posible cerrada).",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-deluxe-lead-graphic-designer",
+  "empresa": "Deluxe Media",
+  "puesto": "Lead Graphic Designer",
+  "grupo": "es",
+  "pais": "ES",
+  "ubicacion": "Madrid, ES",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Híbrido según el listado; verificar visa.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 84,
+  "cv": "Andrea Velasco - Lead Graphic DesignerDX.html",
+  "url": "https://es.indeed.com/viewjob?jk=3497a1dd5305b748",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Presencial: \"Location: On site - Madrid\".",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-deluxe-graphic-designer",
+  "empresa": "Deluxe Media",
+  "puesto": "Graphic Designer",
+  "grupo": "es",
+  "pais": "ES",
+  "ubicacion": "Madrid, ES",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Híbrido según el listado; verificar visa.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 82,
+  "cv": "Andrea Velasco - Graphic DesignerDX2.html",
+  "url": "https://es.indeed.com/viewjob?jk=ec76c901a7e073d0",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Presencial: \"Location: On site - Madrid\".",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-siliconhr-creative-brand-designer",
+  "empresa": "Silicon HR",
+  "puesto": "Junior Creative & Brand Designer",
+  "grupo": "es",
+  "pais": "ES",
+  "ubicacion": "Madrid, ES",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Híbrido según el listado; verificar visa.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 81,
+  "cv": "Andrea Velasco - Creative Brand DesignerSH.html",
+  "url": "https://es.indeed.com/viewjob?jk=4d0c9a86af740c2b",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "No es remoto: Indeed lo marca presencial en Madrid y el JD no ofrece remoto ni visa.",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-contempo-graphic-web-designer",
+  "empresa": "Contempo Media",
+  "puesto": "Graphic & Web Designer",
+  "grupo": "ca",
+  "pais": "CA",
+  "ubicacion": "Toronto, ON, CA",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Dice remoto; falta confirmar si exige autorización de trabajo en Canadá.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 82,
+  "cv": "Andrea Velasco - Graphic Web DesignerCM.html",
+  "url": "https://ca.indeed.com/viewjob?jk=b6004658f0204ac8",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Híbrido: \"Toronto, hybrid (3 days in office)\".",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-deciem-senior-manager-art-design",
+  "empresa": "DECIEM (NIOD / The Ordinary)",
+  "puesto": "Senior Manager, Art & Design",
+  "grupo": "ca",
+  "pais": "CA",
+  "ubicacion": "Toronto, ON, CA",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Híbrido según el listado; verificar visa.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 80,
+  "cv": "Andrea Velasco - Senior Art Design ManagerDC.html",
+  "url": "https://ca.indeed.com/viewjob?jk=a7106b0992069709",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Híbrido: \"This is a three day in office hybrid role, based out of our Liberty Village office\".",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ },
+ {
+  "id": "and-walmartca-associate-graphic",
+  "empresa": "Walmart Canada",
+  "puesto": "Associate Graphic Designer",
+  "grupo": "ca",
+  "pais": "CA",
+  "ubicacion": "Mississauga, ON, CA",
+  "modalidad": "NO ELEGIBLE",
+  "cita": "Híbrido según el listado; verificar visa.",
+  "publicada": "",
+  "encontrada": "2026-10-09",
+  "fit": 81,
+  "cv": "Andrea Velasco - Associate Graphic DesignerWM.html",
+  "url": "https://ca.indeed.com/viewjob?jk=42721c4f97e5c88b",
+  "fuente": "Indeed",
+  "motivo": "Verificada el 26 oct 2026 (Indeed vía JobSpy / Ashby).",
+  "estado": "descartada",
+  "fecha_estado": "2026-10-26",
+  "nota": "",
+  "motivo_descarte": "Presencial: \"Primary Location… 1940 Argentia Rd, Mississauga, ON\".",
+  "learned": true,
+  "learned_at": "2026-10-26",
+  "origen": "asistente"
+ }
+]
+</script>
 
 <script>
 function showTab(id, btn){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
 }
+function toggleChangelog(open){
+  var el=document.getElementById('changelog');
+  el.classList.toggle('open', !!open);
+  if(open){ var c=el.querySelector('.cl-close'); if(c) c.focus(); }
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') toggleChangelog(false); });
+</script>
+
+<script>
+(function(){
+  /* ===== Modo (local vs Pages) ===== */
+  var meta=document.querySelector('meta[name="andrea-mode"]');
+  var MODE=(meta && meta.content) || (location.hostname.endsWith('github.io') ? 'pages' : 'local');
+  document.querySelectorAll('[data-mode]').forEach(function(el){ if(el.getAttribute('data-mode')!==MODE) el.style.display='none'; });
+  function editorUrl(file){
+    var q='?file='+encodeURIComponent(file);
+    return MODE==='pages' ? 'editor.html'+q : 'http://localhost:8777/_editor.html'+q;
+  }
+
+  /* ===== Datos + estado ===== */
+  var STATE_KEY='andrea-tracker:v2:state', EXPORT_KEY='andrea-tracker:v2:lastExport';
+  var JOBS=[];
+  try{ JOBS=JSON.parse(document.getElementById('andrea-jobs').textContent||'[]'); }catch(e){ JOBS=[]; }
+  function loadState(){
+    try{ var s=JSON.parse(localStorage.getItem(STATE_KEY)||'null'); if(s && s.schema===1 && s.rows) return s; }catch(e){}
+    return {schema:1, updatedAt:null, rows:{}};
+  }
+  var state=loadState();
+  function saveState(){
+    state.updatedAt=new Date().toISOString();
+    try{ localStorage.setItem(STATE_KEY, JSON.stringify(state)); }catch(e){ alert('No se pudo guardar en este navegador: '+e.message); }
+    storeStatus();
+  }
+  function today(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function setOverride(id, patch){
+    var o=state.rows[id]||{};
+    Object.keys(patch).forEach(function(k){ o[k]=patch[k]; });
+    o.ts=new Date().toISOString();
+    state.rows[id]=o; saveState(); render();
+  }
+  // estado efectivo = override del navegador encima del data island
+  function eff(j){
+    var o=state.rows[j.id]||{}, r={};
+    Object.keys(j).forEach(function(k){ r[k]=j[k]; });
+    ['estado','fecha_estado','nota','motivo_descarte'].forEach(function(k){ if(o[k]!==undefined) r[k]=o[k]; });
+    // "revisado" solo lo pone el asistente en el data island
+    r.learned = (j.estado==='descartada' && j.learned===true && (o.estado===undefined || o.estado==='descartada')) ? true : false;
+    if(o.estado!==undefined && o.estado!==j.estado){ r.origen='andrea'; }
+    return r;
+  }
+
+  /* ===== Render ===== */
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  var GROUPS=[
+    {k:'global', t:'Remoto global / LATAM', n:'Remotas desde cualquier país, LATAM/Americas o contractor/EOR, con la cita del JD.'},
+    {k:'us', t:'Estados Unidos', n:'Solo sirven si el JD acepta candidatos fuera de US o da visa. "Remote" sin geografía = US-only.'},
+    {k:'uk', t:'Reino Unido', n:'Ojo con "right to work in the UK": sin visa no sirve.'},
+    {k:'es', t:'España', n:'Confirmar si exige residir en España o si es remoto desde fuera.'},
+    {k:'ca', t:'Canadá', n:'Confirmar autorización de trabajo o sponsorship.'}
+  ];
+  var MODCLASS={'REMOTO GLOBAL':'mod-global','REMOTO LATAM':'mod-latam','VISA SPONSORSHIP':'mod-visa'};
+  function modHtml(r){
+    return '<span class="mod '+(MODCLASS[r.modalidad]||'mod-pend')+'">'+esc(r.modalidad||'POR VERIFICAR')+'</span>'+(r.cita?'<small class="cita">'+esc(r.cita)+'</small>':'');
+  }
+  function fitHtml(n){
+    n=parseInt(n,10); if(isNaN(n)) return '—';
+    return '<span class="fit'+(n<80?' fit-med':'')+'"><span class="fit-bar"><span class="fit-fill" style="width:'+n+'%"></span></span>'+n+'</span>';
+  }
+  function cvLink(r, cls){ return r.cv ? '<a class="'+(cls||'')+'" href="'+esc(editorUrl(r.cv))+'" title="Abrir este CV en el editor">Abrir CV</a>' : '—'; }
+  function srcLink(r){ return r.url ? '<a href="'+esc(r.url)+'" target="_blank" rel="noopener">'+esc(r.fuente||'Vacante')+'</a>' : esc(r.fuente||'—'); }
+
+  function renderAplicar(rows){
+    var host=document.getElementById('aplicar-groups'), html='';
+    GROUPS.forEach(function(g){
+      var gr=rows.filter(function(r){ return (r.grupo||'us')===g.k; });
+      html+='<div class="jt-subtable-head">'+esc(g.t)+' <span class="cnt" data-cnt-group="'+g.k+'">'+gr.length+'</span><span class="jt-subtable-note">'+esc(g.n)+'</span></div>';
+      html+='<table id="aplicar-table-'+g.k+'" class="jt-aplicar-sub"><thead><tr><th>Empresa</th><th>Puesto</th><th>Publicada</th><th>Encontrada</th><th>Ubicación / $</th><th>Modalidad</th><th>Fit</th><th>CV</th><th>Fuente</th><th>Motivo</th></tr></thead><tbody>';
+      if(!gr.length) html+='<tr class="empty-row"><td colspan="10">Sin vacantes en este grupo.</td></tr>';
+      gr.forEach(function(r){
+        html+='<tr id="'+esc(r.id)+'" data-fit="'+esc(r.fit)+'" data-mod="'+esc(r.modalidad||'POR VERIFICAR')+'">'+
+          '<td><strong>'+esc(r.empresa)+'</strong></td><td>'+esc(r.puesto)+'</td>'+
+          '<td>'+(r.publicada?esc(r.publicada):'—')+'</td><td>'+(r.encontrada?esc(r.encontrada):'—')+'</td>'+
+          '<td>'+esc(r.ubicacion)+'</td><td>'+modHtml(r)+'</td><td>'+fitHtml(r.fit)+'</td>'+
+          '<td>'+cvLink(r,'cv-btn')+'<button type="button" class="row-btn applied" data-act="applied" data-id="'+esc(r.id)+'">Marcar aplicada</button><button type="button" class="row-btn discard" data-act="discard" data-id="'+esc(r.id)+'">Descartar</button></td>'+
+          '<td>'+srcLink(r)+'</td><td>'+esc(r.motivo)+'</td></tr>';
+      });
+      html+='</tbody></table>';
+    });
+    host.innerHTML=html;
+  }
+  var STATUS={aplicada:['status-applied','Aplicada'],revision:['status-review','En revisión'],entrevista:['status-interview','Entrevista'],rechazada:['status-rejected','Rechazada']};
+  function moveSelect(r){
+    var opts=[['','Mover a…'],['aplicada','Aplicadas'],['revision','En revisión'],['entrevista','Entrevista'],['rechazada','Rechazada'],['aplicar','Por aplicar']];
+    return '<select class="move" data-id="'+esc(r.id)+'" aria-label="Mover vacante">'+opts.filter(function(o){return o[0]!==r.estado}).map(function(o){return '<option value="'+o[0]+'">'+o[1]+'</option>'}).join('')+'</select>';
+  }
+  function renderLog(tableId, rows, emptyMsg){
+    var tb=document.querySelector('#'+tableId+' tbody');
+    if(!rows.length){ tb.innerHTML='<tr class="empty-row"><td colspan="7">'+emptyMsg+'</td></tr>'; return; }
+    tb.innerHTML=rows.map(function(r){
+      var st=STATUS[r.estado]||['status-applied',r.estado];
+      return '<tr id="'+esc(r.id)+'"><td><strong>'+esc(r.empresa)+'</strong></td><td>'+esc(r.puesto)+'</td><td>'+(r.fecha_estado?esc(r.fecha_estado):'—')+'</td>'+
+        '<td>'+cvLink(r)+'</td><td>'+srcLink(r)+'</td>'+
+        '<td class="v3-note" data-id="'+esc(r.id)+'" data-field="nota" title="Doble clic para editar la nota">'+(r.nota?esc(r.nota):'—')+'</td>'+
+        '<td><span class="status '+st[0]+'">'+esc(st[1])+'</span>'+moveSelect(r)+'</td></tr>';
+    }).join('');
+  }
+  function renderDesc(rows){
+    var tb=document.querySelector('#descartadas-table tbody');
+    if(!rows.length){ tb.innerHTML='<tr class="empty-row"><td colspan="7">Aún no hay vacantes descartadas. Usa el botón "Descartar" en una fila de "Por aplicar".</td></tr>'; return; }
+    tb.innerHTML=rows.map(function(r){
+      var byAsst = r.origen==='asistente';
+      var learned = r.learned ? '<span class="v3-learned-yes">revisado '+esc(r.learned_at||'')+'</span>' : '<span class="v3-learned-no">sin revisar</span>';
+      var motivo = byAsst
+        ? '<td>'+esc(r.motivo_descarte)+'<br/><span class="by-asst">descartada por verificación</span></td>'
+        : '<td class="v3-note" data-id="'+esc(r.id)+'" data-field="motivo_descarte" title="Doble clic para editar el motivo">'+(r.motivo_descarte?esc(r.motivo_descarte):'—')+'</td>';
+      return '<tr id="'+esc(r.id)+'" data-learned="'+(r.learned?'yes':'no')+'"><td><strong>'+esc(r.empresa)+'</strong></td><td>'+esc(r.puesto)+'</td><td>'+(r.fecha_estado?esc(r.fecha_estado):'—')+'</td>'+
+        '<td>'+cvLink(r)+'</td><td>'+srcLink(r)+'</td>'+motivo+'<td class="v3-learned-cell">'+learned+(byAsst?'':'<select class="move" data-id="'+esc(r.id)+'" aria-label="Recuperar vacante"><option value="">Mover a…</option><option value="aplicar">Por aplicar</option></select>')+'</td></tr>';
+    }).join('');
+  }
+  function setN(id,n){ var el=document.getElementById(id); if(el) el.textContent=String(n); }
+
+  function render(){
+    var all=JOBS.map(eff);
+    function by(e){ return all.filter(function(r){ return r.estado===e; }); }
+    var ap=by('aplicar'), apl=by('aplicada'), rev=by('revision'), ent=by('entrevista'), rec=by('rechazada'), des=by('descartada');
+    renderAplicar(ap);
+    renderLog('aplicadas-table', apl, 'Aún no hay vacantes aplicadas. Dale a "Marcar aplicada" en Por aplicar.');
+    renderLog('revision-table', rev, 'Nada en revisión todavía.');
+    renderLog('entrevistas-table', ent, 'Sin entrevistas todavía.');
+    renderLog('rechazadas-table', rec, 'Sin rechazos registrados.');
+    renderDesc(des);
+    [['aplicar',ap],['aplicadas',apl],['revision',rev],['entrevistas',ent],['rechazadas',rec],['descartadas',des]].forEach(function(p){
+      setN('cnt-'+p[0], p[1].length); setN('stat-'+p[0], p[1].length);
+    });
+    initResizers();
+    applyFilters();
+  }
+
+  /* ===== Filtros + orden (Por aplicar) ===== */
+  var elCompany=document.getElementById('jt-f-company'), elRole=document.getElementById('jt-f-role'), elLoc=document.getElementById('jt-f-location'),
+      elMod=document.getElementById('jt-f-mod'), elFit=document.getElementById('jt-f-fit'), elFitVal=document.getElementById('jt-f-fit-val'),
+      elHasCv=document.getElementById('jt-f-hascv'), elCount=document.getElementById('jt-f-count'), elReset=document.getElementById('jt-f-reset');
+  var sortBtns=Array.prototype.slice.call(document.querySelectorAll('.jt-sort'));
+  var sortState={key:null,dir:0};
+  function dataRows(){ return Array.prototype.slice.call(document.querySelectorAll('#aplicar-groups tbody tr')).filter(function(r){ return !r.classList.contains('empty-row'); }); }
+  function cellText(row,i){ return (row.children[i]?row.children[i].textContent:'').trim(); }
+  function rowDate(row,i){ var m=cellText(row,i).match(/(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{2}):(\d{2}))?/); return m?parseInt(m[1]+m[2]+m[3]+(m[4]||'00')+(m[5]||'00'),10):0; }
+  function applyFilters(){
+    var q=elCompany.value.trim().toLowerCase(), role=elRole.value.trim().toLowerCase(), loc=elLoc.value.trim().toLowerCase(),
+        mod=elMod.value, minF=parseInt(elFit.value,10)||0, onlyCv=elHasCv.checked, shown=0, total=0;
+    if(sortState.key) doSort();
+    dataRows().forEach(function(row){
+      total++;
+      var fit=parseInt(row.getAttribute('data-fit'),10); if(isNaN(fit)) fit=-1;
+      var ok=true;
+      if(q && cellText(row,0).toLowerCase().indexOf(q)===-1) ok=false;
+      if(role && cellText(row,1).toLowerCase().indexOf(role)===-1) ok=false;
+      if(loc && cellText(row,4).toLowerCase().indexOf(loc)===-1) ok=false;
+      if(mod && row.getAttribute('data-mod')!==mod) ok=false;
+      if(minF>0 && fit<minF) ok=false;
+      if(onlyCv && !row.children[7].querySelector('a')) ok=false;
+      row.classList.toggle('jt-hidden',!ok);
+      if(ok) shown++;
+    });
+    elCount.innerHTML='Mostrando <b>'+shown+'</b> de '+total+(minF>0?' · fit \u2265 '+minF:'')+(mod?' · '+esc(mod):'')+(onlyCv?' · solo con CV':'');
+  }
+  function doSort(){
+    var key=sortState.key, dir=sortState.dir;
+    function v(r){ return key==='pub'?rowDate(r,2):key==='found'?rowDate(r,3):(parseInt(r.getAttribute('data-fit'),10)||-1); }
+    document.querySelectorAll('#aplicar-groups tbody').forEach(function(tb){
+      var rows=Array.prototype.slice.call(tb.children).filter(function(r){ return !r.classList.contains('empty-row'); });
+      rows.sort(function(a,b){ return (v(a)-v(b))*dir; }).forEach(function(r){ tb.appendChild(r); });
+    });
+  }
+  sortBtns.forEach(function(btn){ btn.addEventListener('click', function(){
+    var key=btn.getAttribute('data-sort');
+    if(sortState.key===key) sortState.dir = sortState.dir===-1 ? 1 : -1; else { sortState.key=key; sortState.dir=-1; }
+    sortBtns.forEach(function(b){ var a=b.getAttribute('data-sort')===key; b.classList.toggle('active',a); b.querySelector('.jt-arrow').textContent=a?(sortState.dir===-1?'\u2193':'\u2191'):''; });
+    applyFilters();
+  }); });
+  [elCompany,elRole,elLoc].forEach(function(el){ el.addEventListener('input',applyFilters); });
+  elMod.addEventListener('change',applyFilters); elHasCv.addEventListener('change',applyFilters);
+  elFit.addEventListener('input',function(){ elFitVal.textContent=elFit.value; applyFilters(); });
+  elReset.addEventListener('click',function(){
+    elCompany.value=''; elRole.value=''; elLoc.value=''; elMod.value=''; elFit.value=0; elFitVal.textContent='0'; elHasCv.checked=false;
+    sortState={key:null,dir:0}; sortBtns.forEach(function(b){ b.classList.remove('active'); b.querySelector('.jt-arrow').textContent=''; });
+    render();
+  });
+
+  /* ===== Modal (descartar / aplicada / restablecer) ===== */
+  var modalBox=document.getElementById('action-modal'), elModal=modalBox.querySelector('.dz-modal'),
+      elTitle=document.getElementById('dz-title'), elSub=document.getElementById('dz-sub'), elHint=document.getElementById('dz-hint'),
+      elMotivo=document.getElementById('dz-motivo'), elConfirm=document.getElementById('dz-confirm'),
+      elIconD=document.getElementById('dz-icon-discard'), elIconA=document.getElementById('dz-icon-applied');
+  var current=null, mode='discard';
+  function companyOf(id){ var j=JOBS.filter(function(x){return x.id===id})[0]; return j?j.empresa:''; }
+  function openModal(m,id){
+    mode=m; current=id; elMotivo.value=''; elMotivo.style.borderColor='';
+    elModal.classList.remove('mode-applied','mode-reset');
+    var c=esc(companyOf(id));
+    if(m==='applied'){
+      elModal.classList.add('mode-applied'); elIconD.style.display='none'; elIconA.style.display='';
+      elTitle.textContent='Marcar como aplicada';
+      elSub.innerHTML='Nota al aplicar a <b>'+c+'</b> (opcional). Ej.: sueldo que pediste, cómo aplicaste, contacto.';
+      elMotivo.placeholder='Ej.: Pedí USD 60K anual, apliqué por Greenhouse, contacto Ana.';
+      elHint.textContent='La nota es opcional: puedes dejarla en blanco y escribirla luego en la pestaña Aplicadas.';
+      elConfirm.textContent='Marcar aplicada';
+    } else if(m==='reset'){
+      elModal.classList.add('mode-reset'); elIconD.style.display=''; elIconA.style.display='none';
+      elTitle.textContent='Restablecer el tracker';
+      elSub.innerHTML='Esto borra de este navegador tus aplicadas, descartes y notas, y regresa todo a como lo dejó el asistente. Si no exportaste el JSON, no se puede deshacer.';
+      elConfirm.textContent='Restablecer';
+    } else {
+      elIconD.style.display=''; elIconA.style.display='none';
+      elTitle.textContent='Descartar vacante';
+      elSub.innerHTML='¿Por qué descartas <b>'+c+'</b>? Lo leo antes de la próxima búsqueda para no volver a traerte algo así.';
+      elMotivo.placeholder='Ej.: exige vivir en US, es híbrido, pago muy bajo, muy junior...';
+      elHint.textContent='Escribe el motivo con tus palabras. Es tu forma de enseñarme qué no traerte.';
+      elConfirm.textContent='Descartar';
+    }
+    modalBox.classList.add('open');
+    setTimeout(function(){ (m==='reset'?elConfirm:elMotivo).focus(); },30);
+  }
+  function closeModal(){ modalBox.classList.remove('open'); current=null; }
+  function submit(){
+    var texto=elMotivo.value.trim();
+    if(mode==='discard' && !texto){ elMotivo.focus(); elMotivo.style.borderColor='var(--red)'; return; }
+    if(mode==='reset'){
+      Object.keys(localStorage).forEach(function(k){ if(k.indexOf('andrea-tracker:v2:')===0) localStorage.removeItem(k); });
+      state={schema:1,updatedAt:null,rows:{}}; closeModal(); render(); storeStatus(); return;
+    }
+    var id=current; closeModal();
+    if(mode==='applied') setOverride(id,{estado:'aplicada',fecha_estado:today(),nota:texto});
+    else setOverride(id,{estado:'descartada',fecha_estado:today(),motivo_descarte:texto});
+  }
+  document.getElementById('dz-cancel').addEventListener('click',closeModal);
+  elConfirm.addEventListener('click',submit);
+  modalBox.addEventListener('click',function(e){ if(e.target===modalBox) closeModal(); });
+  elMotivo.addEventListener('input',function(){ elMotivo.style.borderColor=''; });
+  document.addEventListener('keydown',function(e){
+    if(!modalBox.classList.contains('open')) return;
+    if(e.key==='Enter' && (e.metaKey||e.ctrlKey)){ e.preventDefault(); submit(); }
+    if(e.key==='Escape') closeModal();
+  });
+
+  /* ===== Delegación: botones, "Mover a…", notas con doble clic ===== */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('button[data-act]'); if(!b) return;
+    openModal(b.getAttribute('data-act'), b.getAttribute('data-id'));
+  });
+  document.addEventListener('change',function(e){
+    var s=e.target.closest('select.move'); if(!s || !s.value) return;
+    var patch={estado:s.value, fecha_estado:today()};
+    if(s.value==='aplicar') patch.motivo_descarte='';
+    setOverride(s.getAttribute('data-id'), patch);
+  });
+  document.addEventListener('dblclick',function(e){
+    var cell=e.target.closest('.v3-note'); if(!cell) return;
+    if(cell.textContent.trim()==='—') cell.textContent='';
+    cell.setAttribute('contenteditable','true'); cell.classList.add('v3-note-editing'); cell.focus();
+    var r=document.createRange(); r.selectNodeContents(cell); var sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  });
+  document.addEventListener('keydown',function(e){
+    var cell=e.target.closest && e.target.closest('.v3-note-editing'); if(!cell) return;
+    if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); cell.blur(); }
+    if(e.key==='Escape'){ cell.blur(); }
+  });
+  document.addEventListener('focusout',function(e){
+    var cell=e.target.closest && e.target.closest('.v3-note-editing'); if(!cell) return;
+    cell.removeAttribute('contenteditable'); cell.classList.remove('v3-note-editing');
+    var field=cell.getAttribute('data-field'), patch={}; patch[field]=cell.textContent.trim();
+    setOverride(cell.getAttribute('data-id'), patch);
+  });
+
+  /* ===== Exportar / importar / restablecer ===== */
+  function storeStatus(){
+    var el=document.getElementById('store-status'), n=Object.keys(state.rows).length;
+    var last=localStorage.getItem(EXPORT_KEY);
+    if(!n){ el.textContent=''; return; }
+    if(!last || (state.updatedAt && state.updatedAt>last)) el.innerHTML='<span class="warn">Tienes cambios sin exportar ('+n+' vacante'+(n===1?'':'s')+').</span>';
+    else el.textContent='Último export: '+last.slice(0,16).replace('T',' ')+'.';
+  }
+  document.getElementById('btn-export').addEventListener('click',function(){
+    var blob=new Blob([JSON.stringify({schema:1,updatedAt:state.updatedAt||new Date().toISOString(),rows:state.rows},null,1)],{type:'application/json'});
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='andrea-tracker-estado-'+today()+'.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    localStorage.setItem(EXPORT_KEY,new Date().toISOString()); storeStatus();
+  });
+  var fileIn=document.getElementById('import-file');
+  document.getElementById('btn-import').addEventListener('click',function(){ fileIn.value=''; fileIn.click(); });
+  fileIn.addEventListener('change',function(){
+    var f=fileIn.files[0]; if(!f) return;
+    f.text().then(function(t){
+      var d=JSON.parse(t);
+      if(!d || d.schema!==1 || typeof d.rows!=='object') throw new Error('el archivo no tiene el formato del tracker (schema 1)');
+      var n=0;
+      Object.keys(d.rows).forEach(function(id){
+        var inc=d.rows[id], cur=state.rows[id];
+        var newer=!cur || String(inc.fecha_estado||'')+String(inc.ts||'') >= String(cur.fecha_estado||'')+String(cur.ts||'');
+        if(newer){ state.rows[id]=inc; n++; }
+      });
+      saveState(); render(); alert('Importado: '+n+' vacante'+(n===1?'':'s')+' actualizada'+(n===1?'':'s')+'.');
+    }).catch(function(e){ alert('No se pudo importar: '+e.message); });
+  });
+  document.getElementById('btn-reset').addEventListener('click',function(){ openModal('reset',null); });
+
+  /* ===== Columnas redimensionables (ancho guardado por tabla+columna) ===== */
+  function colKey(t,i){ return 'andrea-colw:'+t+':'+i; }
+  function initResizers(){
+    document.querySelectorAll('table[id]').forEach(function(table){
+      if(!table.tHead || !table.tHead.rows.length) return;
+      var ths=table.tHead.rows[0].cells;
+      Array.prototype.forEach.call(ths,function(th,idx){
+        var w=localStorage.getItem(colKey(table.id,idx)); if(w) th.style.width=w+'px';
+        if(th.querySelector('.col-resizer')) return;
+        var grip=document.createElement('span'); grip.className='col-resizer'; grip.title='Arrastra para ajustar el ancho · doble clic para restablecer'; th.appendChild(grip);
+        var startX,startW;
+        function mv(e){ var x=e.touches?e.touches[0].clientX:e.clientX; th.style.width=Math.max(40,startW+x-startX)+'px'; }
+        function up(){ grip.classList.remove('dragging'); document.removeEventListener('mousemove',mv); document.removeEventListener('mouseup',up); document.removeEventListener('touchmove',mv); document.removeEventListener('touchend',up);
+          var w=parseInt(th.style.width,10); if(w) localStorage.setItem(colKey(table.id,idx),w); document.body.style.cursor=''; }
+        function dn(e){ e.preventDefault(); e.stopPropagation(); startX=e.touches?e.touches[0].clientX:e.clientX; startW=th.offsetWidth; grip.classList.add('dragging'); document.body.style.cursor='col-resize';
+          document.addEventListener('mousemove',mv); document.addEventListener('mouseup',up); document.addEventListener('touchmove',mv,{passive:false}); document.addEventListener('touchend',up); }
+        grip.addEventListener('mousedown',dn); grip.addEventListener('touchstart',dn,{passive:false});
+        grip.addEventListener('dblclick',function(e){ e.preventDefault(); e.stopPropagation(); th.style.width=''; localStorage.removeItem(colKey(table.id,idx)); });
+      });
+    });
+  }
+
+  render(); storeStatus();
+})();
 </script>
 </body>
 </html>
