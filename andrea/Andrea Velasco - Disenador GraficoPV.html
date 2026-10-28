@@ -15,8 +15,7 @@ body{ font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; backgroun
 .avatar-wrap img{ width:91%; height:auto; display:block; border-radius:50%; }
 .left-content{ padding:5mm 6mm 0 7mm; display:flex; flex-direction:column; flex:1; }
 .cv-logo{ width:100%; max-width:52mm; height:auto; display:block; margin-bottom:0; line-height:0; }
-section.job{ display:block; margin:0; }
-section.job h3{ font-size:calc(6pt * var(--left-scale)); letter-spacing:3.5px; text-transform:uppercase; color:#5d7559; margin:0 0 4mm 0; font-weight:500; }
+.cv-role{ font-size:calc(6pt * var(--left-scale)); letter-spacing:3.5px; text-transform:uppercase; color:#5d7559; margin:0 0 4mm 0; font-weight:500; }
 .left-section{ margin-bottom:4mm; }
 .left-title{ font-size:calc(6pt * var(--left-scale)); font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#5d7559; margin-bottom:2.5mm; padding-bottom:1.5mm; border-bottom:0.5px solid #b8b4af; }
 .left-title.script{ font-family:'Playfair Display',Georgia,serif; font-style:italic; font-weight:400; font-size:calc(10pt * var(--left-scale)); letter-spacing:0; text-transform:none; border-bottom:none; padding-bottom:0; margin-bottom:2mm; }
@@ -37,6 +36,9 @@ section.job h3{ font-size:calc(6pt * var(--left-scale)); letter-spacing:3.5px; t
 .job-meta{ padding-top:0.3mm; }
 .job-period{ font-size:calc(6.5pt * var(--right-scale)); font-weight:700; color:#222; line-height:1.5; }
 .job-jobtitle{ font-size:calc(6.5pt * var(--right-scale)); color:#333; line-height:1.4; }
+/* gancho del editor: section.job vive dentro de .job-meta (cargo actual); no hereda el grid de .job */
+.job-meta section.job{ display:block; grid-template-columns:none; gap:0; margin:0; padding:0; }
+.job-meta section.job h3{ font-size:calc(6.5pt * var(--right-scale)); font-weight:400; color:#333; line-height:1.4; margin:0; padding:0; letter-spacing:normal; text-transform:none; }
 .job-company{ font-size:calc(6.5pt * var(--right-scale)); font-style:italic; color:#5d7559; line-height:1.4; }
 .job-desc{ font-size:calc(7pt * var(--right-scale)); color:#444; line-height:1.55; }
 .job-bullets{ list-style:none; padding:0; margin:0; }
@@ -78,8 +80,7 @@ section.job h3{ font-size:calc(6pt * var(--left-scale)); letter-spacing:3.5px; t
     </div>
     <div class="left-content">
       <img src="andrea-assets/Logo verde.png" alt="Andrea Velasco" class="cv-logo">
-      <!-- gancho del editor: título objetivo editable -->
-      <section class="job"><h3>Diseñador Gráfico</h3></section>
+      <div class="cv-role">Diseñador Gráfico</div>
 
       <div class="left-section">
         <div class="left-title">Contact</div>
@@ -127,7 +128,7 @@ section.job h3{ font-size:calc(6pt * var(--left-scale)); letter-spacing:3.5px; t
         <div class="right-title">experience</div>
 
         <div class="job">
-          <div class="job-meta"><div class="job-period">2023–2026</div><div class="job-jobtitle">Graphic Designer</div><div class="job-company">Organic Nails</div></div>
+          <div class="job-meta"><div class="job-period">2023–2026</div><section class="job"><h3>Graphic Designer</h3></section><div class="job-company">Organic Nails</div></div>
           <ul class="job-bullets">
             <li>Led the end-to-end design of a 12-set illustrated packaging collection that <strong>sold out in under 4 months</strong>.</li>
             <li>Ran the annual production of <strong>250+ graphic assets</strong> (branding, digital, print) with a <strong>90% first-pass approval rate</strong>.</li>

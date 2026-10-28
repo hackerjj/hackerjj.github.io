@@ -148,7 +148,7 @@ tr.jt-hidden{display:none}
 <h1>
   <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
   Job Tracker — Andrea Velasco
-  <button type="button" class="ver-chip" onclick="toggleChangelog(true)" title="Ver historial de cambios" aria-haspopup="dialog">v2.1</button>
+  <button type="button" class="ver-chip" onclick="toggleChangelog(true)" title="Ver historial de cambios" aria-haspopup="dialog">v2.2</button>
 </h1>
 <div class="subtitle">Diseño gráfico · Dirección de arte · Branding | Foco: remoto sin reubicación (y con visa cuando la den) — Reino Unido, España, Estados Unidos, Canadá | andrea.gv@outlook.com</div>
 <div style="margin:-6px 0 18px"><a href="Andrea-Velasco-Portafolio-2026.pdf" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:var(--green);color:#0f160f;font-weight:700;font-size:13px;padding:8px 14px;border-radius:8px;text-decoration:none"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Ver portafolio (PDF)</a></div>
@@ -311,6 +311,14 @@ tr.jt-hidden{display:none}
       <button type="button" class="cl-close" onclick="toggleChangelog(false)">Cerrar</button>
     </div>
     <div class="cl-body" id="changelog-body">
+      <div class="cl-ver">
+        <h4>v2.2 <small>27 oct 2026 · 17:52</small></h4>
+        <ul>
+          <li><span class="cl-tag cl-fix">FIX</span>"Cambiar posición actual" ahora edita el cargo de la experiencia más reciente (Organic Nails), igual que en el editor de Jair. Antes cambiaba el título objetivo bajo el nombre.</li>
+          <li><span class="cl-tag cl-fix">FIX</span>El título objetivo de cada CV ya no lo toca ese campo; se ve igual que antes. Se regeneraron los 32 CVs.</li>
+          <li><span class="cl-tag cl-fix">FIX</span>Los ajustes guardados en el navegador con la versión anterior conservan line-height, tamaños y ATS, pero se descarta la posición vieja para que un título objetivo no termine en el cargo.</li>
+        </ul>
+      </div>
       <div class="cl-ver">
         <h4>v2.1 <small>27 oct 2026 · 16:30</small></h4>
         <ul>
